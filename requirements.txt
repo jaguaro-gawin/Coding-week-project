@@ -22,5 +22,7 @@ ucimlrepo>=0.0.3
 # Testing
 pytest>=7.4.0
 
-# Utilities
+# Utilitie
 joblib>=1.3.0
+
+
