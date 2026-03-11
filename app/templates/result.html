@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% block title %}Diagnosis Result — PediAppend{% endblock %}
+
+{% block content %}
+<section class="result-section">
+
+  <!-- ─── Main Result Card ─── -->
+  <div class="result-main-card animate-in">
+    <div class="result-bg-orb result-bg-orb-1 {% if prediction == 1 %}gradient-bg-red{% else %}gradient-bg-emerald{% endif %}"></div>
+    <div class="result-bg-orb result-bg-orb-2 {% if prediction == 1 %}gradient-bg-orange{% else %}gradient-bg-cyan{% endif %}"></div>
+
+    <div class="result-main-grid">
+      <!-- SVG Probability Ring -->
+      <div class="ring-wrapper">
+        <svg viewBox="0 0 224 224">
+          <defs>
+            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              {% if prediction == 1 %}
+              <stop offset="0%" stop-color="var(--red-500)" />
+              <stop offset="100%" stop-color="var(--orange-500)" />
+              {% else %}
+              <stop offset="0%" stop-color="var(--cyan-500)" />
+              <stop offset="50%" stop-color="var(--teal-500)" />
+              <stop offset="100%" stop-color="var(--emerald-500)" />
+              {% endif %}
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="112" cy="112" r="96" />
+          <circle class="ring-progress" cx="112" cy="112" r="96"
+                  stroke-dasharray="{{ 2 * 3.14159 * 96 }}"
+                  stroke-dashoffset="{{ 2 * 3.14159 * 96 }}"
+                  data-target="{{ 2 * 3.14159 * 96 * (1 - probability) }}" />
+        </svg>
+        <div class="ring-center">
+          <span class="ring-pct" id="ringPct">0</span>
+          <span class="ring-sub">Probability</span>
+        </div>
+        <div class="ring-glow {% if prediction == 1 %}gradient-bg-red{% else %}gradient-bg-cyan{% endif %}"></div>
+      </div>
+
+      <!-- Result Details -->
+      <div class="result-details">
+        <div class="result-badges">
+          {% if probability >= 0.75 %}
+          <span class="result-badge badge-very-high">
+            <i data-lucide="alert-triangle" style="width:16px;height:16px"></i>
+            Very High Risk
+          </span>
+          <span class="result-badge badge-emergency">
+            <i data-lucide="siren" style="width:16px;height:16px"></i>
+            Emergency
+          </span>
+          {% elif probability >= 0.5 %}
+          <span class="result-badge badge-high">
+            <i data-lucide="alert-triangle" style="width:16px;height:16px"></i>
+            High Risk
+          </span>
+          <span class="result-badge badge-urgent">
+            <i data-lucide="clock" style="width:16px;height:16px"></i>
+            Urgent
+          </span>
+          {% elif probability >= 0.25 %}
+          <span class="result-badge badge-moderate">
+            <i data-lucide="alert-circle" style="width:16px;height:16px"></i>
+            Moderate Risk
+          </span>
+          <span class="result-badge badge-routine">
+            <i data-lucide="clock" style="width:16px;height:16px"></i>
+            Monitor
+          </span>
+          {% else %}
+          <span class="result-badge badge-low">
+            <i data-lucide="check-circle" style="width:16px;height:16px"></i>
+            Low Risk
+          </span>
+          <span class="result-badge badge-routine">
+            <i data-lucide="clock" style="width:16px;height:16px"></i>
+            Routine
+          </span>
+          {% endif %}
+        </div>
+
+        <h2>
+          {% if prediction == 1 %}
+          Appendicitis Indicated
+          {% else %}
+          No Appendicitis Indicated
+          {% endif %}
+        </h2>
+
+        <p class="recommendation">
+          {% if probability >= 0.75 %}
+          Immediate surgical consultation recommended. Clinical presentation and model analysis suggest a high probability of acute appendicitis.
+          {% elif probability >= 0.5 %}
+          Further investigation strongly advised. Consider surgical consultation and additional imaging studies.
+          {% elif probability >= 0.25 %}
+          Moderate risk detected. Clinical observation with serial examinations and repeat labs in 6–12 hours recommended.
+          {% else %}
+          Low probability of appendicitis. Consider alternative diagnoses. Discharge with follow-up instructions if clinically appropriate.
+          {% endif %}
+        </p>
+
+        <div class="confidence-interval">
+          <span class="ci-label">Model Confidence</span>
+          <span class="ci-value">{{ "%.1f"|format(confidence * 100) }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Info Cards ─── -->
+  <div class="info-cards">
+    <div class="info-card animate-in">
+      <div class="info-card-inner">
+        <div class="info-card-icon gradient-bg-cyan">
+          <i data-lucide="shield-alert" style="width:18px;height:18px"></i>
+        </div>
+        <div>
+          <div class="info-card-label">Risk Level</div>
+          <div class="info-card-value">
+            {% if probability >= 0.75 %}Very High
+            {% elif probability >= 0.5 %}High
+            {% elif probability >= 0.25 %}Moderate
+            {% else %}Low{% endif %}
+          </div>
+          <div class="info-card-desc">Based on AI analysis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card animate-in">
+      <div class="info-card-inner">
+        <div class="info-card-icon gradient-bg-emerald">
+          <i data-lucide="clock" style="width:18px;height:18px"></i>
+        </div>
+        <div>
+          <div class="info-card-label">Urgency</div>
+          <div class="info-card-value">
+            {% if probability >= 0.75 %}Emergency
+            {% elif probability >= 0.5 %}Urgent
+            {% elif probability >= 0.25 %}Monitor
+            {% else %}Routine{% endif %}
+          </div>
+          <div class="info-card-desc">Recommended response</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card animate-in">
+      <div class="info-card-inner">
+        <div class="info-card-icon gradient-bg-violet">
+          <i data-lucide="target" style="width:18px;height:18px"></i>
+        </div>
+        <div>
+          <div class="info-card-label">Confidence</div>
+          <div class="info-card-value">{{ "%.1f"|format(confidence * 100) }}%</div>
+          <div class="info-card-desc">Model certainty</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card animate-in">
+      <div class="info-card-inner">
+        <div class="info-card-icon gradient-bg-amber">
+          <i data-lucide="cpu" style="width:18px;height:18px"></i>
+        </div>
+        <div>
+          <div class="info-card-label">Model</div>
+          <div class="info-card-value">CatBoost</div>
+          <div class="info-card-desc">95.5% accuracy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SHAP Visualization ─── -->
+  <div class="shap-section">
+    <!-- Bar Chart -->
+    <div class="shap-chart-card animate-in">
+      <div class="shap-chart-header">
+        <div class="shap-chart-header-left">
+          <div class="shap-icon gradient-bg-violet">
+            <i data-lucide="bar-chart-3" style="width:18px;height:18px"></i>
+          </div>
+          <div>
+            <h3>Feature Impact Analysis</h3>
+            <div class="sub">SHAP values showing each feature's contribution to the prediction</div>
+          </div>
+        </div>
+        <div class="shap-legend">
+          <span><span class="shap-legend-dot" style="background:linear-gradient(135deg,var(--cyan-400),var(--teal-500))"></span> Increases Risk</span>
+          <span><span class="shap-legend-dot" style="background:linear-gradient(135deg,var(--orange-400),var(--amber-500))"></span> Decreases Risk</span>
+        </div>
+      </div>
+
+      <div class="shap-bar-rows">
+        {% for sv in shap_values %}
+        <div class="shap-bar-row">
+          <div class="shap-bar-feature">{{ sv.feature }}</div>
+          <div class="shap-bar-track">
+            <div class="shap-bar-fill {{ 'positive' if sv.value > 0 else 'negative' }}"
+                 data-width="{{ sv.pct }}%"></div>
+          </div>
+          <div class="shap-bar-value {{ 'positive' if sv.value > 0 else 'negative' }}">
+            {{ "%+.4f"|format(sv.value) }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Positive / Negative Columns -->
+    <div class="shap-columns animate-in">
+      <!-- Positive Factors -->
+      <div class="shap-column-card positive-col">
+        <div class="shap-column-inner">
+          <div class="shap-column-header">
+            <div class="col-icon gradient-bg-cyan">
+              <i data-lucide="trending-up" style="width:18px;height:18px"></i>
+            </div>
+            <div>
+              <h4>Risk-Increasing Factors</h4>
+              <div class="col-sub">Features pushing toward appendicitis</div>
+            </div>
+          </div>
+          <div class="shap-factor-list">
+            {% for sv in shap_values if sv.value > 0 %}
+            <div class="shap-factor">
+              <div class="shap-factor-inner">
+                <div class="shap-factor-left">
+                  <div class="shap-factor-bar"></div>
+                  <div>
+                    <div class="shap-factor-name">{{ sv.feature }}</div>
+                    <div class="shap-factor-desc">SHAP: {{ "%+.4f"|format(sv.value) }}</div>
+                  </div>
+                </div>
+                <div class="shap-factor-pct">{{ sv.pct }}%</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Negative Factors -->
+      <div class="shap-column-card negative-col">
+        <div class="shap-column-inner">
+          <div class="shap-column-header">
+            <div class="col-icon gradient-bg-orange">
+              <i data-lucide="trending-down" style="width:18px;height:18px"></i>
+            </div>
+            <div>
+              <h4>Risk-Decreasing Factors</h4>
+              <div class="col-sub">Features pushing against appendicitis</div>
+            </div>
+          </div>
+          <div class="shap-factor-list">
+            {% for sv in shap_values if sv.value <= 0 %}
+            <div class="shap-factor">
+              <div class="shap-factor-inner">
+                <div class="shap-factor-left">
+                  <div class="shap-factor-bar"></div>
+                  <div>
+                    <div class="shap-factor-name">{{ sv.feature }}</div>
+                    <div class="shap-factor-desc">SHAP: {{ "%+.4f"|format(sv.value) }}</div>
+                  </div>
+                </div>
+                <div class="shap-factor-pct">{{ sv.pct }}%</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Disclaimer ─── -->
+  <div class="disclaimer animate-in">
+    <i data-lucide="alert-triangle" class="disc-icon"></i>
+    <p>
+      <strong>Clinical Decision Support Tool — Not a Diagnostic Device.</strong>
+      This tool is intended to assist healthcare professionals in clinical decision-making.
+      It does not replace professional medical judgment, physical examination, or established
+      clinical protocols. Always correlate AI predictions with clinical findings.
+    </p>
+  </div>
+
+  <!-- ─── Action Buttons ─── -->
+  <div class="result-actions animate-in">
+    <a href="{{ url_for('index') }}#diagnosis" class="btn btn-lg btn-primary">
+      <i data-lucide="plus" style="width:20px;height:20px"></i>
+      New Diagnosis
+    </a>
+    <a href="{{ url_for('history') }}" class="btn btn-lg btn-ghost">
+      <i data-lucide="history" style="width:20px;height:20px"></i>
+      View History
+    </a>
+    <button onclick="window.print()" class="btn btn-lg btn-ghost">
+      <i data-lucide="printer" style="width:20px;height:20px"></i>
+      Print Report
+    </button>
+  </div>
+
+</section>
+{% endblock %}

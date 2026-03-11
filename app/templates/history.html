@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Diagnosis History — PediAppend{% endblock %}
+
+{% block content %}
+<section class="history-section">
+  <div class="section-header animate-in">
+    <div class="section-badge">
+      <i data-lucide="history" style="width:14px;height:14px"></i>
+      Records
+    </div>
+    <h2>Diagnosis History</h2>
+    <p>Review past diagnostic assessments and their outcomes.</p>
+  </div>
+
+  {% if records %}
+  <!-- Filter Bar -->
+  <div class="filter-bar animate-in">
+    <div class="filter-bar-left">
+      <input type="text" class="filter-input" id="historySearch" placeholder="Search by age or sex...">
+      <select class="filter-select" id="historyFilter">
+        <option value="all">All Results</option>
+        <option value="1">Appendicitis</option>
+        <option value="0">No Appendicitis</option>
+      </select>
+    </div>
+    <div class="filter-bar-right">
+      <span class="record-count" id="recordCount">{{ total }} records</span>
+      <form action="{{ url_for('clear_history') }}" method="POST"
+            onsubmit="return confirm('Clear all history? This cannot be undone.')">
+        <button type="submit" class="btn-danger-sm">
+          <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+          Clear All
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="history-table-wrap animate-in">
+    <table class="history-table" id="historyTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date &amp; Time</th>
+          <th>Age</th>
+          <th>Sex</th>
+          <th>Result</th>
+          <th>Confidence</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr data-id="{{ r.id }}" data-prediction="{{ r.prediction }}"
+            data-age="{{ r.age }}" data-sex="{{ r.sex }}">
+          <td>#{{ r.id }}</td>
+          <td>{{ r.timestamp }}</td>
+          <td>{{ r.age }} yrs</td>
+          <td style="text-transform:capitalize">{{ r.sex }}</td>
+          <td>
+            {% if r.prediction == 1 %}
+            <span class="pill pill-danger">
+              <i data-lucide="alert-triangle" style="width:12px;height:12px"></i>
+              Appendicitis
+            </span>
+            {% else %}
+            <span class="pill pill-safe">
+              <i data-lucide="check-circle" style="width:12px;height:12px"></i>
+              No Appendicitis
+            </span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:.5rem">
+              <div class="confidence-bar-mini">
+                <div class="confidence-bar-fill {{ 'fill-danger' if r.prediction == 1 else 'fill-safe' }}"
+                     style="width:{{ (r.confidence * 100)|round|int }}%"></div>
+              </div>
+              <span class="confidence-pct">{{ "%.1f"|format(r.confidence * 100) }}%</span>
+            </div>
+          </td>
+          <td>
+            <button class="btn-icon" onclick="deleteRecord({{ r.id }}, this)" title="Delete record">
+              <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if total_pages > 1 %}
+  <div class="pagination animate-in">
+    {% for p in range(1, total_pages + 1) %}
+    <a href="{{ url_for('history', page=p) }}" class="page-link {{ 'active' if p == page else '' }}">{{ p }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <!-- Empty State -->
+  <div class="empty-state animate-in">
+    <div class="empty-icon">
+      <i data-lucide="clipboard-x" style="width:48px;height:48px;color:var(--slate-300)"></i>
+    </div>
+    <h3>No Records Yet</h3>
+    <p>Diagnosis history will appear here after your first patient assessment.</p>
+    <a href="{{ url_for('index') }}#diagnosis" class="btn btn-primary">
+      <i data-lucide="plus" style="width:16px;height:16px"></i>
+      Start First Diagnosis
+    </a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
