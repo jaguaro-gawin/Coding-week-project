@@ -4,16 +4,22 @@
    Gère : navbar scroll, smooth scroll, animations d'entrée,
    et auto-dismiss des messages flash.
    ═══════════════════════════════════════════════════════════ */
+/** Seuil de défilement (px) au-delà duquel la navbar passe en mode 'scrolled'. */
+const NAVBAR_SCROLL_THRESHOLD = 20;
+
+/** Seuil de visibilité (0–1) pour l'IntersectionObserver des animations d'entrée. */
+const INTERSECTION_THRESHOLD = 0.08;
+
 document.addEventListener('DOMContentLoaded', () => {
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* ── Navbar : ajout de la classe 'scrolled' au-delà de 20px ── */
+    /* ── Navbar : ajout de la classe 'scrolled' au-delà de NAVBAR_SCROLL_THRESHOLD ── */
     const nav = document.querySelector('.navbar');
     if (nav) {
         window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 20);
+            nav.classList.toggle('scrolled', window.scrollY > NAVBAR_SCROLL_THRESHOLD);
         });
-        nav.classList.toggle('scrolled', window.scrollY > 20);
+        nav.classList.toggle('scrolled', window.scrollY > NAVBAR_SCROLL_THRESHOLD);
     }
 
     /* ── Smooth scroll pour les ancres (#) sauf les liens de navigation de slides ── */
@@ -31,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         const io = new IntersectionObserver(entries => {
             entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-        }, { threshold: 0.08 });
+        }, { threshold: INTERSECTION_THRESHOLD });
         document.querySelectorAll('.animate-in').forEach(el => io.observe(el));
     }
 
