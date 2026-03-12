@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!id) return;
             if (!confirm('Supprimer cet enregistrement ?')) return;
             fetch('/history/' + encodeURIComponent(id), { method: 'DELETE' })
-                .then(r => { if (r.ok) location.reload(); });
+                .then(r => { if (r.ok) location.reload(); })
+                .catch(err => console.error('[history] Erreur suppression :', err));
         });
     }
 
@@ -45,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
         clearBtn.addEventListener('click', () => {
             if (!confirm('Effacer tout l\'historique ? Cette action est irréversible.')) return;
             fetch('/history/clear', { method: 'POST' })
-                .then(r => { if (r.ok) location.reload(); });
+                .then(r => { if (r.ok) location.reload(); })
+                .catch(err => console.error('[history] Erreur effacement :', err));
         });
     }
 
