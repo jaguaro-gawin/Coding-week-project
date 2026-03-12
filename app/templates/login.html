@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Connexion &mdash; PediAppend{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container animate-in visible">
+        <!-- Decorative background -->
+        <div class="auth-bg">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">🔐</div>
+                <h1>Connexion</h1>
+                <p>Accédez à votre espace diagnostic</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('login') }}" class="auth-form">
+                <div class="auth-field">
+                    <label for="username">Nom d'utilisateur</label>
+                    <div class="auth-input-wrap">
+                        <span class="auth-input-icon">👤</span>
+                        <input type="text" id="username" name="username" placeholder="Votre identifiant"
+                               required autocomplete="username" minlength="3">
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    <label for="password">Mot de passe</label>
+                    <div class="auth-input-wrap">
+                        <span class="auth-input-icon">🔑</span>
+                        <input type="password" id="password" name="password" placeholder="Votre mot de passe"
+                               required autocomplete="current-password" minlength="6">
+                    </div>
+                </div>
+
+                <div class="auth-options">
+                    <label class="auth-checkbox">
+                        <input type="checkbox" name="remember" value="1">
+                        <span>Se souvenir de moi</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg auth-submit">
+                    Se connecter →
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Pas encore de compte ?
+                    <a href="{{ url_for('register') }}">Créer un compte</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

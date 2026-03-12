@@ -1,0 +1,230 @@
+{
+  "SVM": {
+    "best": {
+      "params": {
+        "C": 0.1,
+        "gamma": 0.1,
+        "class_weight": "balanced"
+      },
+      "metrics": {
+        "recall": 1.0,
+        "precision": 0.6242,
+        "roc_auc": 0.9036
+      }
+    },
+    "top3": [
+      {
+        "params": {
+          "C": 0.1,
+          "gamma": 0.1,
+          "class_weight": "balanced"
+        },
+        "metrics": {
+          "recall": 1.0,
+          "precision": 0.6242,
+          "roc_auc": 0.9036
+        }
+      },
+      {
+        "params": {
+          "C": 0.01,
+          "gamma": "scale",
+          "class_weight": null
+        },
+        "metrics": {
+          "recall": 1.0,
+          "precision": 0.5924,
+          "roc_auc": 0.909
+        }
+      },
+      {
+        "params": {
+          "C": 0.01,
+          "gamma": "auto",
+          "class_weight": null
+        },
+        "metrics": {
+          "recall": 1.0,
+          "precision": 0.5924,
+          "roc_auc": 0.909
+        }
+      }
+    ]
+  },
+  "Random Forest": {
+    "best": {
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 10,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "class_weight": null
+      },
+      "metrics": {
+        "recall": 1.0,
+        "precision": 0.949,
+        "roc_auc": 0.9837
+      }
+    },
+    "top3": [
+      {
+        "params": {
+          "n_estimators": 200,
+          "max_depth": 10,
+          "min_samples_split": 5,
+          "min_samples_leaf": 2,
+          "class_weight": null
+        },
+        "metrics": {
+          "recall": 1.0,
+          "precision": 0.949,
+          "roc_auc": 0.9837
+        }
+      },
+      {
+        "params": {
+          "n_estimators": 150,
+          "max_depth": 10,
+          "min_samples_split": 5,
+          "min_samples_leaf": 2,
+          "class_weight": null
+        },
+        "metrics": {
+          "recall": 1.0,
+          "precision": 0.9394,
+          "roc_auc": 0.983
+        }
+      },
+      {
+        "params": {
+          "n_estimators": 150,
+          "max_depth": 10,
+          "min_samples_split": 15,
+          "min_samples_leaf": 5,
+          "class_weight": null
+        },
+        "metrics": {
+          "recall": 1.0,
+          "precision": 0.93,
+          "roc_auc": 0.9839
+        }
+      }
+    ]
+  },
+  "LightGBM": {
+    "best": {
+      "params": {
+        "n_estimators": 150,
+        "max_depth": 3,
+        "learning_rate": 0.01,
+        "num_leaves": 15,
+        "class_weight": "balanced"
+      },
+      "metrics": {
+        "recall": 0.9892,
+        "precision": 0.9485,
+        "roc_auc": 0.9837
+      }
+    },
+    "top3": [
+      {
+        "params": {
+          "n_estimators": 150,
+          "max_depth": 3,
+          "learning_rate": 0.01,
+          "num_leaves": 15,
+          "class_weight": "balanced"
+        },
+        "metrics": {
+          "recall": 0.9892,
+          "precision": 0.9485,
+          "roc_auc": 0.9837
+        }
+      },
+      {
+        "params": {
+          "n_estimators": 150,
+          "max_depth": 3,
+          "learning_rate": 0.01,
+          "num_leaves": 20,
+          "class_weight": "balanced"
+        },
+        "metrics": {
+          "recall": 0.9892,
+          "precision": 0.9485,
+          "roc_auc": 0.9837
+        }
+      },
+      {
+        "params": {
+          "n_estimators": 150,
+          "max_depth": 3,
+          "learning_rate": 0.01,
+          "num_leaves": 31,
+          "class_weight": "balanced"
+        },
+        "metrics": {
+          "recall": 0.9892,
+          "precision": 0.9485,
+          "roc_auc": 0.9837
+        }
+      }
+    ]
+  },
+  "CatBoost": {
+    "best": {
+      "params": {
+        "iterations": 50,
+        "depth": 8,
+        "learning_rate": 0.03,
+        "auto_class_weights": null
+      },
+      "metrics": {
+        "recall": 1.0,
+        "precision": 0.9029,
+        "roc_auc": 0.983
+      }
+    },
+    "top3": [
+      {
+        "params": {
+          "iterations": 50,
+          "depth": 8,
+          "learning_rate": 0.03,
+          "auto_class_weights": null
+        },
+        "metrics": {
+          "recall": 1.0,
+          "precision": 0.9029,
+          "roc_auc": 0.983
+        }
+      },
+      {
+        "params": {
+          "iterations": 200,
+          "depth": 10,
+          "learning_rate": 0.01,
+          "auto_class_weights": "Balanced"
+        },
+        "metrics": {
+          "recall": 0.9892,
+          "precision": 0.9485,
+          "roc_auc": 0.9894
+        }
+      },
+      {
+        "params": {
+          "iterations": 100,
+          "depth": 10,
+          "learning_rate": 0.01,
+          "auto_class_weights": "Balanced"
+        },
+        "metrics": {
+          "recall": 0.9892,
+          "precision": 0.9485,
+          "roc_auc": 0.9884
+        }
+      }
+    ]
+  }
+}
