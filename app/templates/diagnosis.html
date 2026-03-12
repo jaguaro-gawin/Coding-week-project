@@ -38,44 +38,13 @@
                             <div class="form-section-icon violet">&#128100;</div>
                             <div><h2>Patient Demographics</h2><p>Basic patient information for assessment</p></div>
                         </div>
-                        <div class="form-grid-2">                            <div class="form-group">
-                                <label><span class="label-icon">&#128101;</span> Pr&eacute;nom</label>
-                                <input type="text" id="patient_first_name" name="patient_first_name" placeholder="ex. Marie" maxlength="60" required>
-                                <span class="field-error">Requis</span>
-                            </div>
-                            <div class="form-group">
-                                <label><span class="label-icon">&#128101;</span> Nom</label>
-                                <input type="text" id="patient_last_name" name="patient_last_name" placeholder="ex. Dupont" maxlength="60" required>
-                                <span class="field-error">Requis</span>
-                            </div>
-                        </div>
-                        <div class="form-grid-2">                            <div class="form-group">
-                                <label><span class="label-icon">&#128197;</span> Date de naissance</label>
-                                <input type="date" id="DateOfBirth" required>
-                                <span class="field-hint">Date de naissance du patient</span>
-                                <span class="field-error">Required</span>
-                            </div>
-                            <div class="form-group">
-                                <label><span class="label-icon">&#128197;</span> Date d'examen</label>
-                                <input type="date" id="ExamDate" required>
-                                <span class="field-hint">Date de la consultation</span>
-                                <span class="field-error">Required</span>
-                            </div>
-                        </div>
-                        <div class="bmi-card" id="ageCard">
-                            <div class="bmi-card-header">
-                                <div class="bmi-card-left">
-                                    <div class="bmi-card-icon">&#128118;</div>
-                                    <div><div class="bmi-card-label">&Acirc;ge calcul&eacute;</div><div class="bmi-card-sublabel">Bas&eacute; sur les dates</div></div>
-                                </div>
-                                <div><span class="bmi-value" id="ageDisplay">--</span><span class="bmi-unit">ans</span></div>
-                            </div>
-                            <div class="bmi-bar"><div class="bmi-bar-fill" id="ageFill" style="width:0%"></div></div>
-                            <input type="hidden" id="Age" name="Age" required>
-                            <div class="bmi-hint">&#9432; &Acirc;ge p&eacute;diatrique : 0-18 ans</div>
-                            <div class="bmi-hint" id="ageError" style="display:none;color:#f43f5e;font-weight:600;">&#9888; L&rsquo;&acirc;ge ne peut pas d&eacute;passer 18 ans (p&eacute;diatrique)</div>
-                        </div>
                         <div class="form-grid-2">
+                            <div class="form-group">
+                                <label><span class="label-icon">&#128197;</span> Age <span class="unit">(years)</span></label>
+                                <input type="number" id="Age" name="Age" step="0.1" min="0" max="18" placeholder="e.g. 10" required>
+                                <span class="field-hint">Patient age for pediatric assessment (0-18)</span>
+                                <span class="field-error">Required</span>
+                            </div>
                             <div class="form-group">
                                 <label><span class="label-icon">&#128100;</span> Biological Sex</label>
                                 <div class="sex-toggle">

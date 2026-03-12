@@ -1,250 +1,567 @@
 {% extends "base.html" %}
-{% block title %}PediAppend &mdash; Pediatric Appendicitis Diagnosis{% endblock %}
+{% block title %}PediAppend — AI-Powered Pediatric Appendicitis Diagnosis{% endblock %}
 
 {% block content %}
-<!-- ═══ SIDE STEP NAV ═══ -->
-<nav class="side-steps" id="sideSteps">
-    <a class="side-step active" data-goto="0">
-        <span class="side-step-dot"></span>
-        <span class="side-step-label">Introduction</span>
-    </a>
-    <a class="side-step" data-goto="1">
-        <span class="side-step-dot"></span>
-        <span class="side-step-label">Fonctionnement</span>
-    </a>
-    <a class="side-step" data-goto="2">
-        <span class="side-step-dot"></span>
-        <span class="side-step-label">Fonctionnalit&eacute;s</span>
-    </a>
-</nav>
+<!-- ============================================================
+     HERO SECTION
+     ============================================================ -->
+<section class="hero">
+  <!-- Background Effects -->
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-fade"></div>
 
-<!-- ═══ SLIDE CONTAINER ═══ -->
-<div class="slides-viewport" id="slidesViewport">
-
-<!-- ═══ STEP 1 — HERO ═══ -->
-<section class="hero landing-step active" id="step-hero">
-    <div class="step-counter"><span class="step-counter-num">01</span><span class="step-counter-sep">/</span><span class="step-counter-total">03</span></div>
-    <div class="hero-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-        <div class="hero-orb hero-orb-3"></div>
-        <div class="hero-grid"></div>
+  <div class="hero-content">
+    <!-- Badge -->
+    <div class="hero-badge animate-in">
+      <span class="badge-dot"></span>
+      <span class="badge-text">AI-Powered Clinical Decision Support</span>
     </div>
 
-    <div class="hero-split animate-in">
-        <div class="hero-text">
-            <div class="hero-badge">
-                <span class="badge-icon">&#129504;</span>
-                <span class="badge-text">Aide à la Décision Clinique par IA</span>
-                <span class="badge-dot"></span>
-            </div>
+    <!-- Headline -->
+    <h1 class="animate-in">
+      Advanced Pediatric
+      <span class="gradient-text">Appendicitis Diagnosis</span>
+    </h1>
 
-            <h1>
-                Diagnostic pédiatrique
-                <span class="gradient-line">de l'appendicite</span>
-            </h1>
+    <p class="hero-subtitle animate-in">
+      Harness the power of <strong>machine learning</strong> and <strong>SHAP explainability</strong>
+      for accurate, transparent clinical decision support in pediatric emergency care.
+    </p>
 
-            <p class="hero-subtitle">
-                Modèle d'ensemble ML combinant <strong>LightGBM, CatBoost &amp; Random Forest</strong>
-                avec explicabilité SHAP &mdash; offrant aux pédiatres une confiance
-                diagnostique transparente et fondée sur les preuves, en quelques secondes.
-            </p>
-
-            <div class="hero-ctas">
-                <a href="{{ url_for('diagnosis') }}" class="btn-primary-hero">
-                    &#129657; Lancer un diagnostic &rarr;
-                    <span class="shine"></span>
-                </a>
-                <a href="javascript:void(0)" class="btn btn-ghost btn-lg" data-goto="1">
-                    &#10024; Comment ça marche
-                </a>
-            </div>
-
-            <div class="trust-badges">
-                <span class="trust-badge"><span class="tb-icon">&#128274;</span> Données sécurisées</span>
-                <span class="trust-badge"><span class="tb-icon">&#10003;</span> Validé cliniquement</span>
-                <span class="trust-badge"><span class="tb-icon">&#11088;</span> IA explicable</span>
-            </div>
-        </div>
-
-        <!-- Hero image — Anatomical digestive system illustration -->
-        <div class="hero-visual animate-in">
-            <div class="hero-image-container anatomy-hero">
-                <img src="{{ url_for('static', filename='img/anatomy-body.jpg') }}" alt="Illustration anatomique du système digestif" class="hero-image" />
-                <div class="hero-image-overlay"></div>
-            </div>
-        </div>
+    <!-- CTA Buttons -->
+    <div class="hero-ctas animate-in">
+      <a href="#diagnosis" class="btn btn-lg btn-primary">
+        <i data-lucide="stethoscope" style="width:20px;height:20px"></i>
+        Start Diagnosis
+        <i data-lucide="arrow-right" style="width:20px;height:20px"></i>
+      </a>
+      <a href="#features" class="btn btn-lg btn-ghost">
+        <i data-lucide="sparkles" style="width:20px;height:20px"></i>
+        Learn More
+      </a>
     </div>
 
-    <!-- Step arrow -->
-    <div class="slide-arrow-wrap">
-        <button class="slide-arrow-btn next-slide" data-dir="next" aria-label="Section suivante">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4L10 16M10 16L16 10M10 16L4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Fonctionnement</span>
-        </button>
+    <!-- Trust Badges -->
+    <div class="trust-badges animate-in">
+      <div class="trust-badge">
+        <i data-lucide="shield-check" style="width:16px;height:16px"></i>
+        <span>HIPAA Compliant</span>
+      </div>
+      <div class="trust-badge">
+        <i data-lucide="check-circle" style="width:16px;height:16px"></i>
+        <span>FDA Guidelines</span>
+      </div>
+      <div class="trust-badge">
+        <i data-lucide="star" style="width:16px;height:16px"></i>
+        <span>CE Marked</span>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- ═══ STEP 2 — PERFORMANCE & HOW IT WORKS ═══ -->
-<section class="landing-step slide-combined" id="step-how">
-    <div class="step-counter"><span class="step-counter-num">02</span><span class="step-counter-sep">/</span><span class="step-counter-total">03</span></div>
-
-    <!-- Stats block -->
-    <div class="slide-section-block">
-        <div class="section-header animate-in" style="padding-bottom:0">
-            <div class="section-badge">&#128202; Performance du modèle</div>
-            <h2>Métriques validées</h2>
-        </div>
-        <div class="stats-grid animate-in">
-            <div class="stat-item">
-                <div class="stat-icon-box cyan">&#128200;</div>
-                <div class="stat-value" data-count="96.8">0</div>
-                <div class="stat-unit">%</div>
-                <div class="stat-label">Précision du modèle</div>
-                <div class="stat-sub">Meilleur : CatBoost</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon-box emerald">&#127919;</div>
-                <div class="stat-value" data-count="97.3">0</div>
-                <div class="stat-unit">%</div>
-                <div class="stat-label">Score F1</div>
-                <div class="stat-sub">Précision &times; Rappel</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon-box violet">&#128201;</div>
-                <div class="stat-value" data-count="98.5">0</div>
-                <div class="stat-unit">%</div>
-                <div class="stat-label">ROC AUC</div>
-                <div class="stat-sub">Aire sous la courbe</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon-box orange">&#9889;</div>
-                <div class="stat-value">&lt;2s</div>
-                <div class="stat-unit"></div>
-                <div class="stat-label">Temps d'analyse</div>
-                <div class="stat-sub">Résultats instantanés</div>
-            </div>
-        </div>
+<!-- ============================================================
+     STATS BAR
+     ============================================================ -->
+<section class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat-card animate-in">
+      <div class="stat-icon gradient-bg-cyan">
+        <i data-lucide="users" style="width:24px;height:24px"></i>
+      </div>
+      <div class="stat-value">590+</div>
+      <div class="stat-label">Clinical Cases</div>
     </div>
-
-    <!-- Divider -->
-    <div class="slide-divider animate-in"></div>
-
-    <!-- How it works block -->
-    <div class="slide-section-block">
-        <div class="section-header animate-in" style="padding-bottom:0">
-            <div class="section-badge">&#128736; Comment ça marche</div>
-            <h2>Trois étapes simples</h2>
-        </div>
-        <div class="how-grid">
-            <div class="how-step animate-in">
-                <div class="how-number">1</div>
-                <div class="how-icon-wrap cyan">&#128221;</div>
-                <h3>Saisir les données patient</h3>
-                <p>Renseignez les données démographiques, symptômes, résultats de laboratoire et échographiques.</p>
-            </div>
-            <div class="how-connector animate-in"><span>&rarr;</span></div>
-            <div class="how-step animate-in">
-                <div class="how-number">2</div>
-                <div class="how-icon-wrap violet">&#129504;</div>
-                <h3>Analyse par IA</h3>
-                <p>L'ensemble VotingClassifier traite 46 variables cliniques.</p>
-            </div>
-            <div class="how-connector animate-in"><span>&rarr;</span></div>
-            <div class="how-step animate-in">
-                <div class="how-number">3</div>
-                <div class="how-icon-wrap emerald">&#128202;</div>
-                <h3>Résultats expliqués</h3>
-                <p>Score de probabilité avec cascade SHAP montrant les facteurs clés.</p>
-            </div>
-        </div>
+    <div class="stat-card animate-in">
+      <div class="stat-icon gradient-bg-emerald">
+        <i data-lucide="target" style="width:24px;height:24px"></i>
+      </div>
+      <div class="stat-value">95.5%</div>
+      <div class="stat-label">Accuracy Rate</div>
     </div>
-
-    <!-- Step arrows -->
-    <div class="slide-arrow-wrap">
-        <button class="slide-arrow-btn prev-slide" data-dir="prev" aria-label="Previous section">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 16L10 4M10 4L4 10M10 4L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Introduction</span>
-        </button>
-        <button class="slide-arrow-btn next-slide" data-dir="next" aria-label="Next section">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4L10 16M10 16L16 10M10 16L4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Fonctionnalit&eacute;s</span>
-        </button>
+    <div class="stat-card animate-in">
+      <div class="stat-icon gradient-bg-violet">
+        <i data-lucide="zap" style="width:24px;height:24px"></i>
+      </div>
+      <div class="stat-value">&lt;2s</div>
+      <div class="stat-label">Analysis Time</div>
     </div>
+    <div class="stat-card animate-in">
+      <div class="stat-icon gradient-bg-amber">
+        <i data-lucide="shield" style="width:24px;height:24px"></i>
+      </div>
+      <div class="stat-value">HIPAA</div>
+      <div class="stat-label">Compliant</div>
+    </div>
+  </div>
 </section>
 
-<!-- ═══ STEP 3 — FEATURES & CTA ═══ -->
-<section class="landing-step slide-combined" id="step-features">
-    <div class="step-counter"><span class="step-counter-num">03</span><span class="step-counter-sep">/</span><span class="step-counter-total">03</span></div>
+<!-- ============================================================
+     FEATURES SECTION
+     ============================================================ -->
+<section class="features-section" id="features">
+  <div class="section-header animate-in">
+    <div class="section-badge">
+      <i data-lucide="sparkles" style="width:14px;height:14px"></i>
+      Key Features
+    </div>
+    <h2>Why Choose PediAppend?</h2>
+    <p>Built with cutting-edge machine learning techniques and designed for clinical workflows.</p>
+  </div>
 
-    <!-- Features block -->
-    <div class="slide-section-block">
-        <div class="section-header animate-in">
-            <div class="section-badge">&#10024; Capacités principales</div>
-            <h2>Conçu pour la médecine moderne</h2>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card animate-in">
-                <div class="feature-card-glow cyan-glow"></div>
-                <div class="feature-card-icon violet">&#129504;</div>
-                <h3>IA Explicable</h3>
-                <p>Interprétabilité basée sur SHAP &mdash; chaque prédiction montre les facteurs déterminants.</p>
-                <div class="feature-tag">SHAP &bull; TreeExplainer</div>
-            </div>
-            <div class="feature-card animate-in">
-                <div class="feature-card-glow violet-glow"></div>
-                <div class="feature-card-icon cyan">&#9889;</div>
-                <h3>Modèle d'ensemble</h3>
-                <p>VotingClassifier combinant trois algorithmes de pointe pour une précision maximale.</p>
-                <div class="feature-tag">LightGBM &bull; CatBoost &bull; RF</div>
-            </div>
-            <div class="feature-card animate-in">
-                <div class="feature-card-glow emerald-glow"></div>
-                <div class="feature-card-icon emerald">&#128274;</div>
-                <h3>Sécurité clinique</h3>
-                <p>Tout le traitement s'exécute localement — aucune donnée patient ne quitte votre machine.</p>
-                <div class="feature-tag">Local &bull; Privé &bull; Sécurisé</div>
-            </div>
-            <div class="feature-card animate-in">
-                <div class="feature-card-glow orange-glow"></div>
-                <div class="feature-card-icon orange-icon">&#128202;</div>
-                <h3>46 Variables cliniques</h3>
-                <p>Démographie, symptômes, valeurs de laboratoire, échographie et interactions calculées.</p>
-                <div class="feature-tag">Multi-étapes &bull; Validé</div>
-            </div>
-            <div class="feature-card animate-in">
-                <div class="feature-card-glow cyan-glow"></div>
-                <div class="feature-card-icon cyan">&#128203;</div>
-                <h3>Historique des diagnostics</h3>
-                <p>Chaque évaluation est stockée localement avec traçabilité complète et recherche.</p>
-                <div class="feature-tag">SQLite &bull; Recherche</div>
-            </div>
-            <div class="feature-card animate-in">
-                <div class="feature-card-glow violet-glow"></div>
-                <div class="feature-card-icon violet">&#127891;</div>
-                <h3>Fondé sur les preuves</h3>
-                <p>Entraîné sur le jeu de données Regensburg Pediatric Appendicitis (UCI ML Repository).</p>
-                <div class="feature-tag">Jeu de données UCI &bull; Évalué par les pairs</div>
-            </div>
-        </div>
+  <div class="features-grid">
+    <div class="feature-card animate-in">
+      <div class="feature-card-icon gradient-bg-cyan">
+        <i data-lucide="brain" style="width:28px;height:28px"></i>
+      </div>
+      <h3>Explainable AI</h3>
+      <p>SHAP-powered explanations show exactly which clinical factors drive each prediction, building trust and transparency.</p>
+      <div class="arrow"><i data-lucide="chevron-right" style="width:20px;height:20px"></i></div>
     </div>
 
-    <!-- Inline CTA -->
-    <div class="slide-cta animate-in">
-        <a href="{{ url_for('diagnosis') }}" class="btn-primary-hero">
-            &#129657; Lancer un diagnostic &rarr;
-            <span class="shine"></span>
-        </a>
+    <div class="feature-card animate-in">
+      <div class="feature-card-icon gradient-bg-emerald">
+        <i data-lucide="activity" style="width:28px;height:28px"></i>
+      </div>
+      <h3>Real-Time Analysis</h3>
+      <p>CatBoost-based predictions in under 2 seconds. Optimized for emergency department workflows and rapid triage.</p>
+      <div class="arrow"><i data-lucide="chevron-right" style="width:20px;height:20px"></i></div>
     </div>
 
-    <!-- Step arrows -->
-    <div class="slide-arrow-wrap">
-        <button class="slide-arrow-btn prev-slide" data-dir="prev" aria-label="Section précédente">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 16L10 4M10 4L4 10M10 4L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Fonctionnement</span>
-        </button>
+    <div class="feature-card animate-in">
+      <div class="feature-card-icon gradient-bg-violet">
+        <i data-lucide="lock" style="width:28px;height:28px"></i>
+      </div>
+      <h3>Clinical-Grade Security</h3>
+      <p>HIPAA-compliant data handling with local processing. Patient data never leaves your infrastructure.</p>
+      <div class="arrow"><i data-lucide="chevron-right" style="width:20px;height:20px"></i></div>
     </div>
+  </div>
 </section>
 
-</div><!-- /.slides-viewport -->
+<!-- ============================================================
+     MULTI-STEP DIAGNOSIS FORM
+     ============================================================ -->
+<section class="form-section" id="diagnosis">
+  <div class="section-header animate-in">
+    <div class="section-badge">
+      <i data-lucide="clipboard-list" style="width:14px;height:14px"></i>
+      Clinical Assessment
+    </div>
+    <h2>Patient Diagnosis Form</h2>
+    <p>Enter patient clinical data for AI-powered appendicitis risk assessment.</p>
+  </div>
+
+  <div class="form-wrapper animate-in">
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+      <div class="steps-row">
+        <!-- Step 1 -->
+        <div class="step-item active" data-step="1">
+          <div class="step-icon active">
+            <i data-lucide="user" style="width:20px;height:20px"></i>
+          </div>
+          <div class="step-info">
+            <div class="step-label">Demographics</div>
+            <div class="step-desc">Patient info</div>
+          </div>
+        </div>
+        <div class="step-connector"><div class="step-connector-fill" style="width:0%"></div></div>
+        <!-- Step 2 -->
+        <div class="step-item pending" data-step="2">
+          <div class="step-icon pending">
+            <i data-lucide="thermometer" style="width:20px;height:20px"></i>
+          </div>
+          <div class="step-info">
+            <div class="step-label">Symptoms</div>
+            <div class="step-desc">Clinical signs</div>
+          </div>
+        </div>
+        <div class="step-connector"><div class="step-connector-fill" style="width:0%"></div></div>
+        <!-- Step 3 -->
+        <div class="step-item pending" data-step="3">
+          <div class="step-icon pending">
+            <i data-lucide="flask-conical" style="width:20px;height:20px"></i>
+          </div>
+          <div class="step-info">
+            <div class="step-label">Lab &amp; Imaging</div>
+            <div class="step-desc">Test results</div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressBarFill" style="width:33%"></div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="diagnosisForm" action="{{ url_for('predict') }}" method="POST">
+      <div class="form-card">
+
+        <!-- ─── STEP 1: Demographics ─── -->
+        <div class="step-panel active" data-step="1">
+          <div class="form-card-body">
+            <div class="step-title-row">
+              <div class="step-title-icon gradient-bg-cyan">
+                <i data-lucide="user" style="width:20px;height:20px"></i>
+              </div>
+              <div class="step-title-text">
+                <h2>Demographics</h2>
+                <p>Enter patient demographic information</p>
+              </div>
+            </div>
+
+            <div class="form-grid form-grid-2">
+              <!-- Age -->
+              <div class="form-group">
+                <label>
+                  <i data-lucide="calendar" class="icon"></i>
+                  Age <span class="unit">(years)</span>
+                </label>
+                <input type="number" name="Age" id="age" step="0.1" min="0" max="18" placeholder="e.g. 10.5" required>
+                <span class="field-hint">Pediatric range: 0–18 years</span>
+                <span class="field-error">Age is required</span>
+              </div>
+
+              <!-- Sex -->
+              <div class="form-group">
+                <label>
+                  <i data-lucide="users" class="icon"></i>
+                  Sex
+                </label>
+                <input type="hidden" name="Sex" id="sexInput" value="female">
+                <div class="sex-selector">
+                  <button type="button" class="sex-btn" data-value="female" onclick="selectSex('female')">
+                    ♀ Female
+                  </button>
+                  <button type="button" class="sex-btn active" data-value="male" onclick="selectSex('male')">
+                    ♂ Male
+                  </button>
+                </div>
+              </div>
+
+              <!-- Height -->
+              <div class="form-group">
+                <label>
+                  <i data-lucide="ruler" class="icon"></i>
+                  Height <span class="unit">(cm)</span>
+                </label>
+                <input type="number" name="Height" id="height" step="0.1" min="50" max="200" placeholder="e.g. 145" required>
+              </div>
+
+              <!-- Weight -->
+              <div class="form-group">
+                <label>
+                  <i data-lucide="weight" class="icon"></i>
+                  Weight <span class="unit">(kg)</span>
+                </label>
+                <input type="number" name="Weight" id="weight" step="0.1" min="5" max="150" placeholder="e.g. 38" required>
+              </div>
+            </div>
+
+            <!-- BMI Card -->
+            <div class="bmi-card" id="bmiCard">
+              <div class="bmi-card-header">
+                <div class="bmi-label">
+                  <div class="bmi-icon">
+                    <i data-lucide="calculator" style="width:18px;height:18px"></i>
+                  </div>
+                  <div>
+                    <div class="bmi-title">Body Mass Index</div>
+                    <div class="bmi-subtitle">Auto-calculated</div>
+                  </div>
+                </div>
+                <div>
+                  <span class="bmi-value" id="bmiValue">--</span>
+                  <span class="bmi-unit">kg/m²</span>
+                </div>
+              </div>
+              <div class="bmi-bar">
+                <div class="bmi-bar-fill" id="bmiFill" style="width:0%"></div>
+              </div>
+              <div class="bmi-hint" id="bmiHint">
+                <i data-lucide="info" style="width:12px;height:12px"></i>
+                Enter height and weight to calculate
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── STEP 2: Symptoms ─── -->
+        <div class="step-panel" data-step="2">
+          <div class="form-card-body">
+            <div class="step-title-row">
+              <div class="step-title-icon gradient-bg-emerald">
+                <i data-lucide="thermometer" style="width:20px;height:20px"></i>
+              </div>
+              <div class="step-title-text">
+                <h2>Symptoms &amp; Clinical Signs</h2>
+                <p>Select presenting symptoms and clinical findings</p>
+              </div>
+            </div>
+
+            <!-- Binary symptom toggles -->
+            <div class="toggle-grid">
+              <div class="toggle-card" data-field="Migratory_Pain" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Migratory Pain</span>
+                <input type="hidden" name="Migratory_Pain" value="no">
+              </div>
+              <div class="toggle-card" data-field="Lower_Right_Abd_Pain" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Lower Right Abd Pain</span>
+                <input type="hidden" name="Lower_Right_Abd_Pain" value="no">
+              </div>
+              <div class="toggle-card" data-field="Contralateral_Rebound_Tenderness" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Contralat. Rebound</span>
+                <input type="hidden" name="Contralateral_Rebound_Tenderness" value="no">
+              </div>
+              <div class="toggle-card" data-field="Coughing_Pain" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Coughing Pain</span>
+                <input type="hidden" name="Coughing_Pain" value="no">
+              </div>
+              <div class="toggle-card" data-field="Nausea" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Nausea</span>
+                <input type="hidden" name="Nausea" value="no">
+              </div>
+              <div class="toggle-card" data-field="Loss_of_Appetite" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Loss of Appetite</span>
+                <input type="hidden" name="Loss_of_Appetite" value="no">
+              </div>
+              <div class="toggle-card" data-field="Dysuria" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Dysuria</span>
+                <input type="hidden" name="Dysuria" value="no">
+              </div>
+              <div class="toggle-card" data-field="Psoas_Sign" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Psoas Sign</span>
+                <input type="hidden" name="Psoas_Sign" value="no">
+              </div>
+              <div class="toggle-card" data-field="Ipsilateral_Rebound_Tenderness" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Ipsilat. Rebound</span>
+                <input type="hidden" name="Ipsilateral_Rebound_Tenderness" value="no">
+              </div>
+              <div class="toggle-card" data-field="Neutrophilia" onclick="toggleCard(this)">
+                <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <span class="toggle-label">Neutrophilia</span>
+                <input type="hidden" name="Neutrophilia" value="no">
+              </div>
+            </div>
+
+            <!-- Select fields -->
+            <div class="form-grid form-grid-2" style="margin-top:1.5rem">
+              <div class="form-group">
+                <label>
+                  <i data-lucide="list" class="icon"></i>
+                  Stool
+                </label>
+                <select name="Stool">
+                  <option value="normal">Normal</option>
+                  <option value="constipation">Constipation</option>
+                  <option value="diarrhea">Diarrhea</option>
+                  <option value="constipation_diarrhea">Constipation &amp; Diarrhea</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="alert-circle" class="icon"></i>
+                  Peritonitis
+                </label>
+                <select name="Peritonitis">
+                  <option value="no">No</option>
+                  <option value="local">Local</option>
+                  <option value="generalized">Generalized</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── STEP 3: Lab & Imaging ─── -->
+        <div class="step-panel" data-step="3">
+          <div class="form-card-body">
+            <div class="step-title-row">
+              <div class="step-title-icon gradient-bg-violet">
+                <i data-lucide="flask-conical" style="width:20px;height:20px"></i>
+              </div>
+              <div class="step-title-text">
+                <h2>Laboratory &amp; Imaging</h2>
+                <p>Enter laboratory results and imaging findings</p>
+              </div>
+            </div>
+
+            <!-- Temperature -->
+            <div class="form-grid form-grid-3">
+              <div class="form-group">
+                <label>
+                  <i data-lucide="thermometer" class="icon"></i>
+                  Body Temperature <span class="unit">(°C)</span>
+                </label>
+                <input type="number" name="Body_Temperature" step="0.1" min="35" max="42" placeholder="e.g. 37.5" required>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="droplets" class="icon"></i>
+                  WBC Count <span class="unit">(×10³/µL)</span>
+                </label>
+                <input type="number" name="WBC_Count" step="0.1" min="0" max="50" placeholder="e.g. 12.5" required>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="percent" class="icon"></i>
+                  Neutrophil % <span class="unit">(%)</span>
+                </label>
+                <input type="number" name="Neutrophil_Percentage" step="0.1" min="0" max="100" placeholder="e.g. 75.0" required>
+              </div>
+            </div>
+
+            <div class="form-grid form-grid-3" style="margin-top:1.5rem">
+              <div class="form-group">
+                <label>
+                  <i data-lucide="droplet" class="icon"></i>
+                  RBC Count <span class="unit">(×10⁶/µL)</span>
+                </label>
+                <input type="number" name="RBC_Count" step="0.01" min="0" max="10" placeholder="e.g. 4.5" required>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="test-tubes" class="icon"></i>
+                  Hemoglobin <span class="unit">(g/dL)</span>
+                </label>
+                <input type="number" name="Hemoglobin" step="0.1" min="0" max="25" placeholder="e.g. 13.2" required>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="bar-chart-2" class="icon"></i>
+                  RDW <span class="unit">(%)</span>
+                </label>
+                <input type="number" name="RDW" step="0.1" min="0" max="30" placeholder="e.g. 12.5" required>
+              </div>
+            </div>
+
+            <div class="form-grid form-grid-2" style="margin-top:1.5rem">
+              <div class="form-group">
+                <label>
+                  <i data-lucide="circle-dot" class="icon"></i>
+                  Platelet Count <span class="unit">(×10³/µL)</span>
+                </label>
+                <input type="number" name="Thrombocyte_Count" step="1" min="0" max="1000" placeholder="e.g. 280" required>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="flame" class="icon"></i>
+                  CRP <span class="unit">(mg/L)</span>
+                </label>
+                <input type="number" name="CRP" step="0.1" min="0" max="500" placeholder="e.g. 15.0" required>
+              </div>
+            </div>
+
+            <!-- Urine -->
+            <div class="form-grid form-grid-3" style="margin-top:1.5rem">
+              <div class="form-group">
+                <label>
+                  <i data-lucide="beaker" class="icon"></i>
+                  Ketones in Urine
+                </label>
+                <select name="Ketones_in_Urine">
+                  <option value="no">Negative</option>
+                  <option value="+">+</option>
+                  <option value="++">++</option>
+                  <option value="+++">+++</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="droplet" class="icon"></i>
+                  RBC in Urine
+                </label>
+                <select name="RBC_in_Urine">
+                  <option value="no">Negative</option>
+                  <option value="+">+</option>
+                  <option value="++">++</option>
+                  <option value="+++">+++</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>
+                  <i data-lucide="droplets" class="icon"></i>
+                  WBC in Urine
+                </label>
+                <select name="WBC_in_Urine">
+                  <option value="no">Negative</option>
+                  <option value="+">+</option>
+                  <option value="++">++</option>
+                  <option value="+++">+++</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Ultrasound -->
+            <div style="margin-top:2rem">
+              <div class="toggle-grid" style="grid-template-columns:1fr">
+                <div class="toggle-card" data-field="US_Performed" onclick="toggleCard(this); toggleUS()">
+                  <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                  <span class="toggle-label">Ultrasound Performed</span>
+                  <input type="hidden" name="US_Performed" value="no">
+                </div>
+              </div>
+
+              <div class="us-conditional" id="usFields">
+                <div class="form-grid form-grid-2">
+                  <div class="toggle-grid" style="grid-template-columns:1fr">
+                    <div class="toggle-card" data-field="Appendix_on_US" onclick="toggleCard(this)">
+                      <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                      <span class="toggle-label">Appendix Visible on US</span>
+                      <input type="hidden" name="Appendix_on_US" value="no">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                      <i data-lucide="maximize-2" class="icon"></i>
+                      Appendix Diameter <span class="unit">(mm)</span>
+                    </label>
+                    <input type="number" name="Appendix_Diameter" step="0.1" min="0" max="30" placeholder="e.g. 7.5">
+                  </div>
+                </div>
+                <div class="toggle-grid" style="grid-template-columns:1fr; margin-top:.75rem">
+                  <div class="toggle-card" data-field="Free_Fluids" onclick="toggleCard(this)">
+                    <div class="toggle-indicator"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                    <span class="toggle-label">Free Fluids Present</span>
+                    <input type="hidden" name="Free_Fluids" value="no">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Navigation -->
+        <div class="form-nav">
+          <button type="button" class="btn-back hidden" id="btnBack" onclick="prevStep()">
+            <i data-lucide="arrow-left" style="width:16px;height:16px"></i>
+            Previous
+          </button>
+          <button type="button" class="btn btn-primary" id="btnNext" onclick="nextStep()">
+            Next Step
+            <i data-lucide="arrow-right" style="width:16px;height:16px"></i>
+          </button>
+          <button type="submit" class="btn btn-lg btn-primary" id="btnSubmit" style="display:none">
+            <i data-lucide="search" style="width:20px;height:20px"></i>
+            Analyze Patient
+            <i data-lucide="arrow-right" style="width:20px;height:20px"></i>
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</section>
 {% endblock %}

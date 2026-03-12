@@ -1,240 +1,144 @@
 {% extends "base.html" %}
-{% block title %}Résultat du Diagnostic &mdash; PediAppend{% endblock %}
+{% block title %}Diagnosis Result &mdash; PediAppend{% endblock %}
 
 {% block content %}
 <section class="result-section">
     <div class="result-container">
-
-        <!-- ═══ Main Result Card ═══ -->
-        <div class="result-main-card animate-in">
-            <div class="bg-decor">
-                <div class="bg-orb bg-orb-1" style="background:linear-gradient(135deg,#4a7c9b,#5b8fa8)"></div>
-                <div class="bg-orb bg-orb-2" style="background:linear-gradient(135deg,#6a9fb5,#4a7c9b)"></div>
-                <div class="grid-overlay"></div>
+        <div class="result-card animate-in">
+            <div class="result-card-header">
+                <h2>&#129657; Diagnosis Result</h2>
             </div>
-            <div class="result-main-inner">
-                <!-- SVG Ring -->
-                <div class="ring-container">
-                    <svg viewBox="0 0 200 200" class="ring-svg">
-                        <defs>
-                            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                {% if probability >= 0.7 %}
-                                <stop offset="0%" stop-color="#c0392b"/>
-                                <stop offset="100%" stop-color="#a93226"/>
-                                {% elif probability >= 0.4 %}
-                                <stop offset="0%" stop-color="#d4a03c"/>
-                                <stop offset="100%" stop-color="#c4922e"/>
-                                {% else %}
-                                <stop offset="0%" stop-color="#2e86ab"/>
-                                <stop offset="100%" stop-color="#27ae60"/>
-                                {% endif %}
-                            </linearGradient>
-                        </defs>
-                        <circle cx="100" cy="100" r="90" class="ring-bg"/>
-                        <circle cx="100" cy="100" r="90" class="ring-progress"
-                                stroke="url(#ringGradient)"
-                                data-pct="{{ (probability * 100)|round(1) }}"/>
-                    </svg>
-                    <div class="ring-center">
-                        <span class="ring-pct" data-value="{{ (probability * 100)|round(1) }}">0</span><span class="ring-pct-sign">%</span>
-                        <span class="ring-label">Score de risque</span>
+            <div class="result-card-body">
+                <div class="result-main">
+                    <div class="ring-container">
+                        <svg viewBox="0 0 200 200" class="ring-svg">
+                            <defs>
+                                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    {% if probability >= 0.7 %}
+                                    <stop offset="0%" stop-color="#ef4444"/>
+                                    <stop offset="100%" stop-color="#dc2626"/>
+                                    {% elif probability >= 0.4 %}
+                                    <stop offset="0%" stop-color="#f59e0b"/>
+                                    <stop offset="100%" stop-color="#f97316"/>
+                                    {% else %}
+                                    <stop offset="0%" stop-color="#06b6d4"/>
+                                    <stop offset="100%" stop-color="#10b981"/>
+                                    {% endif %}
+                                </linearGradient>
+                            </defs>
+                            <circle cx="100" cy="100" r="90" class="ring-bg"/>
+                            <circle cx="100" cy="100" r="90" class="ring-progress"
+                                    stroke="url(#ringGrad)"
+                                    data-pct="{{ (probability * 100)|round(1) }}"/>
+                        </svg>
+                        <div class="ring-label">
+                            <span class="ring-pct" data-value="{{ (probability * 100)|round(1) }}">0</span><span class="ring-pct-sign">%</span>
+                            <span class="ring-subtext">Risk Score</span>
+                        </div>
                     </div>
-                    <div class="ring-glow" style="background:{% if probability >= 0.7 %}#c0392b{% elif probability >= 0.4 %}#d4a03c{% else %}#2e86ab{% endif %}"></div>
-                </div>
 
-                <!-- Details -->
-                <div class="result-details">
-                    <div class="result-badges">
+                    <div class="result-details">
                         {% if probability >= 0.7 %}
-                        <div class="risk-badge high">&#9888; Risque élevé</div>
-                        <div class="urgency-badge urgent">Consultation chirurgicale urgente recommandée</div>
+                        <div class="risk-badge high">&#9888; High Risk</div>
+                        <div class="urgency-badge urgent">Urgent surgical consultation recommended</div>
                         {% elif probability >= 0.4 %}
-                        <div class="risk-badge moderate">&#9888; Risque modéré</div>
-                        <div class="urgency-badge routine">Surveillance rapprochée avec réévaluation périodique</div>
+                        <div class="risk-badge moderate">&#9888; Moderate Risk</div>
+                        <div class="urgency-badge moderate">Close monitoring with periodic re-evaluation</div>
                         {% else %}
-                        <div class="risk-badge low">&#10003; Risque faible</div>
-                        <div class="urgency-badge routine">Poursuite de l'observation et suivi de routine</div>
+                        <div class="risk-badge low">&#10003; Low Risk</div>
+                        <div class="urgency-badge low">Continue observation and routine follow-up</div>
                         {% endif %}
-                    </div>
 
-                    <h2>{{ "Appendicite probable" if prediction == 1 else "Appendicite peu probable" }}</h2>
-                    {% if patient_name %}
-                    <p class="result-patient-name">&#128101; {{ patient_name }}</p>
-                    {% endif %}
-                    <p class="result-desc">
-                        Le modèle prédit une probabilité de <strong>{{ (probability * 100)|round(1) }}%</strong>
-                        d'appendicite avec une confiance de <strong>{{ (confidence * 100)|round(1) }}%</strong>.
-                    </p>
-
-                    <div class="confidence-inline">
-                        <span class="ci-icon">&#127919;</span>
-                        <span class="ci-label">Confiance</span>
-                        <span class="ci-value">{{ (confidence * 100)|round(1) }}%</span>
+                        <div class="result-meta">
+                            <div class="result-meta-item">
+                                <span class="meta-label">Prediction</span>
+                                <span class="meta-value">{{ "Appendicitis Likely" if prediction == 1 else "Appendicitis Unlikely" }}</span>
+                            </div>
+                            <div class="result-meta-item">
+                                <span class="meta-label">Confidence</span>
+                                <span class="meta-value">{{ (confidence * 100)|round(1) }}%</span>
+                            </div>
+                            <div class="result-meta-item">
+                                <span class="meta-label">Probability</span>
+                                <span class="meta-value">{{ (probability * 100)|round(1) }}%</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ═══ Info Cards ═══ -->
-        <div class="info-cards animate-in">
+        <div class="info-cards-grid animate-in">
             <div class="info-card">
-                <div class="info-card-inner">
-                    <div class="info-card-icon cyan">&#128202;</div>
-                    <div>
-                        <div class="info-card-title">Évaluation du risque</div>
-                        <div class="info-card-value">{{ (probability * 100)|round(1) }}%</div>
-                        <div class="info-card-desc">Score de probabilité</div>
-                    </div>
-                </div>
+                <div class="info-card-icon cyan">&#128202;</div>
+                <div class="info-card-label">Risk Assessment</div>
+                <div class="info-card-value">{{ (probability * 100)|round(1) }}%</div>
+                <div class="info-card-sub">Probability Score</div>
             </div>
             <div class="info-card">
-                <div class="info-card-inner">
-                    <div class="info-card-icon emerald">&#127919;</div>
-                    <div>
-                        <div class="info-card-title">Confiance du modèle</div>
-                        <div class="info-card-value">{{ (confidence * 100)|round(1) }}%</div>
-                        <div class="info-card-desc">Certitude de prédiction</div>
-                    </div>
-                </div>
+                <div class="info-card-icon emerald">&#127919;</div>
+                <div class="info-card-label">Model Confidence</div>
+                <div class="info-card-value">{{ (confidence * 100)|round(1) }}%</div>
+                <div class="info-card-sub">Prediction Certainty</div>
             </div>
             <div class="info-card">
-                <div class="info-card-inner">
-                    <div class="info-card-icon violet">&#129504;</div>
-                    <div>
-                        <div class="info-card-title">Variables analysées</div>
-                        <div class="info-card-value">{{ shap_values|length }}</div>
-                        <div class="info-card-desc">Facteurs contributifs</div>
-                    </div>
-                </div>
+                <div class="info-card-icon violet">&#129504;</div>
+                <div class="info-card-label">Features Analyzed</div>
+                <div class="info-card-value">{{ shap_values|length }}</div>
+                <div class="info-card-sub">Contributing Factors</div>
             </div>
             <div class="info-card">
-                <div class="info-card-inner">
-                    <div class="info-card-icon amber">&#9201;</div>
-                    <div>
-                        <div class="info-card-title">Temps d'analyse</div>
-                        <div class="info-card-value">&lt;2s</div>
-                        <div class="info-card-desc">Traitement en temps réel</div>
-                    </div>
-                </div>
+                <div class="info-card-icon orange">&#9201;</div>
+                <div class="info-card-label">Analysis Time</div>
+                <div class="info-card-value">&lt;2s</div>
+                <div class="info-card-sub">Real-time Processing</div>
             </div>
         </div>
 
-        <!-- ═══ Anatomical Reference ═══ -->
-        <div class="anatomy-card animate-in">
-            <div class="anatomy-card-inner">
-                <div class="anatomy-text">
-                    <div class="anatomy-badge">
-                        <span>&#129658;</span> Localisation anatomique
-                    </div>
-                    <h3>Zone concernée : Appendice vermiforme</h3>
-                    <p>L'appendice est un petit organe tubulaire situé à la jonction de l'intestin grêle et du gros intestin, dans la <strong>fosse iliaque droite</strong>. L'inflammation de cet organe (appendicite) constitue l'urgence chirurgicale abdominale la plus fréquente en pédiatrie.</p>
-                    <div class="anatomy-facts">
-                        <div class="anatomy-fact">
-                            <span class="af-icon">&#128205;</span>
-                            <div>
-                                <div class="af-title">Position</div>
-                                <div class="af-desc">Fosse iliaque droite (point de McBurney)</div>
-                            </div>
-                        </div>
-                        <div class="anatomy-fact">
-                            <span class="af-icon">&#128207;</span>
-                            <div>
-                                <div class="af-title">Taille normale</div>
-                                <div class="af-desc">6 à 9 cm de longueur, &lt;6 mm de diamètre</div>
-                            </div>
-                        </div>
-                        <div class="anatomy-fact">
-                            <span class="af-icon">&#9888;</span>
-                            <div>
-                                <div class="af-title">Seuil pathologique</div>
-                                <div class="af-desc">Diamètre &gt;6 mm à l'échographie</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="anatomy-illustration">
-                    <img src="{{ url_for('static', filename='img/appendix-anatomy.svg') }}" alt="Illustration anatomique de l'appendice" />
-                </div>
-            </div>
-        </div>
-
-        <!-- ═══ SHAP Card ═══ -->
         <div class="shap-card animate-in">
-            <div class="shap-card-inner">
-                <div class="shap-header">
-                    <div class="shap-header-left">
-                        <div class="shap-header-icon">&#129504;</div>
-                        <div>
-                            <h3>Importance des variables &mdash; Analyse SHAP</h3>
-                            <span class="shap-sub">Facteurs clés derrière cette prédiction</span>
-                        </div>
-                    </div>
-                    <div class="shap-legend">
-                        <span class="legend-item"><span class="legend-dot positive"></span> Positif</span>
-                        <span class="legend-item"><span class="legend-dot negative"></span> Négatif</span>
-                    </div>
+            <div class="shap-card-header">
+                <div class="shap-card-title">
+                    <div class="shap-icon">&#129504;</div>
+                    <div><h3>Feature Importance &mdash; SHAP Analysis</h3><p>Understanding the key factors behind this prediction</p></div>
                 </div>
-
-                <!-- Waterfall bars -->
-                <div class="shap-rows">
-                    {% set max_shap = shap_values[0].shap|abs if shap_values else 1 %}
+                <div class="shap-legend">
+                    <span class="legend-item positive"><span class="blob"></span> Positive</span>
+                    <span class="legend-item negative"><span class="blob"></span> Negative</span>
+                </div>
+            </div>
+            <div class="shap-card-body">
+                <div class="shap-waterfall">
                     {% for sv in shap_values %}
                     <div class="shap-row">
                         <div class="shap-feature">{{ sv.feature }}</div>
-                        <div class="shap-track">
-                            <div class="shap-fill {{ 'positive' if sv.shap >= 0 else 'negative' }}"
-                                 data-width="{{ ((sv.shap|abs / max_shap) * 100)|round|int }}"></div>
+                        <div class="shap-bar-wrap">
+                            {% if sv.shap >= 0 %}
+                            <div class="shap-bar positive" data-width="{{ ((sv.shap / shap_values[0].shap) * 100)|round|int if shap_values[0].shap != 0 else 0 }}"></div>
+                            {% else %}
+                            <div class="shap-bar negative" data-width="{{ ((sv.shap|abs / shap_values[0].shap|abs) * 100)|round|int if shap_values[0].shap != 0 else 0 }}"></div>
+                            {% endif %}
                         </div>
                         <div class="shap-val {{ 'positive' if sv.shap >= 0 else 'negative' }}">{{ '%+.4f'|format(sv.shap) }}</div>
                     </div>
                     {% endfor %}
                 </div>
 
-                <!-- Feature columns -->
-                <div class="shap-features-grid">
-                    <div class="shap-feature-col positive-col">
-                        <div class="shap-col-header">
-                            <div class="shap-col-icon pos">&#128314;</div>
-                            <div>
-                                <div class="shap-col-title pos">Contributions positives</div>
-                                <div class="shap-col-sub pos">Augmente la probabilité d'appendicite</div>
-                            </div>
-                        </div>
+                <div class="shap-feature-cards">
+                    <div class="shap-col positive">
+                        <h4>&#128314; Positive Contributions</h4>
                         {% for sv in shap_values if sv.shap >= 0 %}
-                        <div class="shap-feature-item pos-item">
-                            <div class="shap-feature-item-inner">
-                                <div class="shap-feature-item-left">
-                                    <div class="shap-feature-bar pos"></div>
-                                    <div>
-                                        <div class="shap-feature-name">{{ sv.feature }}</div>
-                                        <div class="shap-feature-desc">Valeur : {{ sv.value }}</div>
-                                    </div>
-                                </div>
-                                <div class="shap-contribution pos">+{{ '%.4f'|format(sv.shap) }}</div>
-                            </div>
+                        <div class="shap-feat-card positive">
+                            <span class="shap-feat-name">{{ sv.feature }}</span>
+                            <span class="shap-feat-value">+{{ '%.4f'|format(sv.shap) }}</span>
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="shap-feature-col negative-col">
-                        <div class="shap-col-header">
-                            <div class="shap-col-icon neg">&#128315;</div>
-                            <div>
-                                <div class="shap-col-title neg">Contributions négatives</div>
-                                <div class="shap-col-sub neg">Diminue la probabilité d'appendicite</div>
-                            </div>
-                        </div>
+                    <div class="shap-col negative">
+                        <h4>&#128315; Negative Contributions</h4>
                         {% for sv in shap_values if sv.shap < 0 %}
-                        <div class="shap-feature-item neg-item">
-                            <div class="shap-feature-item-inner">
-                                <div class="shap-feature-item-left">
-                                    <div class="shap-feature-bar neg"></div>
-                                    <div>
-                                        <div class="shap-feature-name">{{ sv.feature }}</div>
-                                        <div class="shap-feature-desc">Valeur : {{ sv.value }}</div>
-                                    </div>
-                                </div>
-                                <div class="shap-contribution neg">{{ '%.4f'|format(sv.shap) }}</div>
-                            </div>
+                        <div class="shap-feat-card negative">
+                            <span class="shap-feat-name">{{ sv.feature }}</span>
+                            <span class="shap-feat-value">{{ '%.4f'|format(sv.shap) }}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -242,20 +146,21 @@
             </div>
         </div>
 
-        <!-- ═══ Actions ═══ -->
         <div class="result-actions animate-in">
-            <a href="{{ url_for('diagnosis') }}" class="btn btn-primary btn-lg">
-                &#129657; Nouveau diagnostic
+            <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg">
+                &#129657; New Diagnosis
             </a>
             <a href="{{ url_for('history') }}" class="btn btn-ghost btn-lg">
-                &#128196; Voir l'historique
+                &#128196; View History
             </a>
         </div>
 
-        <!-- ═══ Disclaimer ═══ -->
-        <div class="clinical-note animate-in">
-            <span class="note-icon">&#9888;</span>
-            <p><strong>Avertissement clinique :</strong> Cet outil fournit des prédictions assistées par IA à des fins d'aide à la décision clinique uniquement. Les résultats doivent être interprétés par des professionnels de santé qualifiés en conjonction avec les données cliniques, l'historique du patient et les protocoles diagnostiques établis.</p>
+        <div class="disclaimer animate-in">
+            <div class="disclaimer-icon">&#9888;</div>
+            <div>
+                <p class="disclaimer-title">Clinical Disclaimer</p>
+                <p class="disclaimer-text">This tool provides AI-assisted predictions for educational and clinical decision support purposes only. Results should be interpreted by qualified healthcare professionals in conjunction with clinical findings, patient history, and established diagnostic protocols. Do not use as the sole basis for medical decisions.</p>
+            </div>
         </div>
     </div>
 </section>
