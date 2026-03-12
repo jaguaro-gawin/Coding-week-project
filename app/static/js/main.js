@@ -265,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const age = diffMs / (365.25 * 24 * 60 * 60 * 1000);
         const val = age.toFixed(1);
         if (ageDisp) ageDisp.textContent = val;
+        if (ageFill) ageFill.style.width = Math.min(age / 18 * 100, 100) + '%';
         if (ageCard) ageCard.classList.add('active');
         const ageErrorEl = document.getElementById('ageError');
         if (age > 18) {
