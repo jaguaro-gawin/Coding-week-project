@@ -39,10 +39,11 @@ login_manager.login_message_category = "info"
 
 
 class User(UserMixin):
-    def __init__(self, id, username, password_hash):
+    def __init__(self, id, username, password_hash, is_admin=False):
         self.id = id
         self.username = username
         self.password_hash = password_hash
+        self.is_admin = is_admin
 
 
 @login_manager.user_loader
@@ -51,7 +52,8 @@ def load_user(user_id):
     row = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
     conn.close()
     if row:
-        return User(row["id"], row["username"], row["password_hash"])
+        return User(row["id"], row["username"], row["password_hash"],
+                     bool(row["is_admin"]))
     return None
 
 # ── Load model artefacts ──
@@ -94,7 +96,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL
+            password_hash TEXT NOT NULL,
+            is_admin INTEGER DEFAULT 0
         )
     """)
     conn.execute("""
@@ -120,6 +123,24 @@ def init_db():
         conn.execute("ALTER TABLE history ADD COLUMN patient_first_name TEXT DEFAULT ''")
     if "patient_last_name" not in columns:
         conn.execute("ALTER TABLE history ADD COLUMN patient_last_name TEXT DEFAULT ''")
+
+    # Migrate: add is_admin column to users if missing
+    cursor_u = conn.execute("PRAGMA table_info(users)")
+    user_columns = [col[1] for col in cursor_u.fetchall()]
+    if "is_admin" not in user_columns:
+        conn.execute("ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0")
+
+    # Create default admin account if none exists
+    admin = conn.execute("SELECT id FROM users WHERE is_admin = 1").fetchone()
+    if admin is None:
+        admin_pw = bcrypt.hashpw("admin123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        try:
+            conn.execute("INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, 1)",
+                         ("admin", admin_pw))
+        except sqlite3.IntegrityError:
+            # admin username exists but isn't marked admin
+            conn.execute("UPDATE users SET is_admin = 1 WHERE username = 'admin'")
+
     conn.commit()
     conn.close()
 
@@ -329,7 +350,7 @@ def register():
 
         row = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
         conn.close()
-        user = User(row["id"], row["username"], row["password_hash"])
+        user = User(row["id"], row["username"], row["password_hash"], bool(row["is_admin"]))
         login_user(user)
         flash(f"Bienvenue, {username} !", "success")
         return redirect(url_for("home"))
@@ -350,7 +371,7 @@ def login():
         conn.close()
 
         if row and bcrypt.checkpw(password.encode("utf-8"), row["password_hash"].encode("utf-8")):
-            user = User(row["id"], row["username"], row["password_hash"])
+            user = User(row["id"], row["username"], row["password_hash"], bool(row["is_admin"]))
             login_user(user, remember=request.form.get("remember"))
             flash(f"Bon retour, {username} !", "success")
             next_page = request.args.get("next")
@@ -473,6 +494,136 @@ def delete_record(record_id):
 def clear_history():
     conn = get_db()
     conn.execute("DELETE FROM history WHERE user_id = ?", (current_user.id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"status": "ok"})
+
+
+# ═══════════════════════════════════════════════════════════
+#  Profile Route
+# ═══════════════════════════════════════════════════════════
+
+@app.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    if request.method == "POST":
+        new_username = request.form.get("username", "").strip()
+        current_password = request.form.get("current_password", "")
+        new_password = request.form.get("new_password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        conn = get_db()
+        row = conn.execute("SELECT * FROM users WHERE id = ?", (current_user.id,)).fetchone()
+
+        # Verify current password
+        if not bcrypt.checkpw(current_password.encode("utf-8"), row["password_hash"].encode("utf-8")):
+            conn.close()
+            flash("Mot de passe actuel incorrect.", "error")
+            return redirect(url_for("profile"))
+
+        # Update username
+        if new_username and new_username != current_user.username:
+            if len(new_username) < 3:
+                conn.close()
+                flash("Le nom d'utilisateur doit contenir au moins 3 caractères.", "error")
+                return redirect(url_for("profile"))
+            existing = conn.execute("SELECT id FROM users WHERE username = ? AND id != ?",
+                                    (new_username, current_user.id)).fetchone()
+            if existing:
+                conn.close()
+                flash("Ce nom d'utilisateur est déjà pris.", "error")
+                return redirect(url_for("profile"))
+            conn.execute("UPDATE users SET username = ? WHERE id = ?",
+                         (new_username, current_user.id))
+            current_user.username = new_username
+
+        # Update password
+        if new_password:
+            if len(new_password) < 6:
+                conn.close()
+                flash("Le nouveau mot de passe doit contenir au moins 6 caractères.", "error")
+                return redirect(url_for("profile"))
+            if new_password != confirm_password:
+                conn.close()
+                flash("Les mots de passe ne correspondent pas.", "error")
+                return redirect(url_for("profile"))
+            pw_hash = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+            conn.execute("UPDATE users SET password_hash = ? WHERE id = ?",
+                         (pw_hash, current_user.id))
+            current_user.password_hash = pw_hash
+
+        conn.commit()
+        conn.close()
+        flash("Profil mis à jour avec succès.", "success")
+        return redirect(url_for("profile"))
+
+    # GET — count user diagnostics
+    conn = get_db()
+    diag_count = conn.execute("SELECT COUNT(*) FROM history WHERE user_id = ?",
+                              (current_user.id,)).fetchone()[0]
+    conn.close()
+    return render_template("profile.html", diag_count=diag_count)
+
+
+# ═══════════════════════════════════════════════════════════
+#  Admin Routes
+# ═══════════════════════════════════════════════════════════
+
+@app.route("/admin")
+@login_required
+def admin_dashboard():
+    if not current_user.is_admin:
+        flash("Accès réservé aux administrateurs.", "error")
+        return redirect(url_for("home"))
+
+    conn = get_db()
+    users = conn.execute("SELECT id, username, is_admin FROM users ORDER BY id").fetchall()
+    total_diag = conn.execute("SELECT COUNT(*) FROM history").fetchone()[0]
+    user_stats = []
+    for u in users:
+        count = conn.execute("SELECT COUNT(*) FROM history WHERE user_id = ?",
+                             (u["id"],)).fetchone()[0]
+        user_stats.append({
+            "id": u["id"],
+            "username": u["username"],
+            "is_admin": bool(u["is_admin"]),
+            "diag_count": count,
+        })
+    conn.close()
+    return render_template("admin.html", users=user_stats, total_diag=total_diag)
+
+
+@app.route("/admin/toggle/<int:user_id>", methods=["POST"])
+@login_required
+def admin_toggle(user_id):
+    if not current_user.is_admin:
+        return jsonify({"error": "Non autorisé"}), 403
+    if user_id == current_user.id:
+        return jsonify({"error": "Impossible de modifier votre propre rôle"}), 400
+
+    conn = get_db()
+    row = conn.execute("SELECT is_admin FROM users WHERE id = ?", (user_id,)).fetchone()
+    if row is None:
+        conn.close()
+        return jsonify({"error": "Utilisateur introuvable"}), 404
+    new_val = 0 if row["is_admin"] else 1
+    conn.execute("UPDATE users SET is_admin = ? WHERE id = ?", (new_val, user_id))
+    conn.commit()
+    conn.close()
+    return jsonify({"status": "ok", "is_admin": bool(new_val)})
+
+
+@app.route("/admin/delete/<int:user_id>", methods=["DELETE"])
+@login_required
+def admin_delete_user(user_id):
+    if not current_user.is_admin:
+        return jsonify({"error": "Non autorisé"}), 403
+    if user_id == current_user.id:
+        return jsonify({"error": "Impossible de supprimer votre propre compte"}), 400
+
+    conn = get_db()
+    conn.execute("DELETE FROM history WHERE user_id = ?", (user_id,))
+    conn.execute("DELETE FROM users WHERE id = ?", (user_id,))
     conn.commit()
     conn.close()
     return jsonify({"status": "ok"})

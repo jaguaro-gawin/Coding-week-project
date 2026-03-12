@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Administration — PediAppend{% endblock %}
+{% block content %}
+<section class="admin-section">
+    <div class="admin-container">
+
+        <!-- Header -->
+        <div class="admin-header">
+            <div>
+                <h1>Panneau d'administration</h1>
+                <p class="admin-subtitle">{{ users|length }} utilisateur{{ 's' if users|length != 1 else '' }} · {{ total_diag }} diagnostic{{ 's' if total_diag != 1 else '' }} au total</p>
+            </div>
+        </div>
+
+        <!-- Users table -->
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Utilisateur</th>
+                        <th>Rôle</th>
+                        <th>Diagnostics</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr id="user-row-{{ u.id }}">
+                        <td class="cell-id">{{ u.id }}</td>
+                        <td class="cell-username">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="8" r="4"/>
+                                <path d="M4 21v-1a6 6 0 0 1 12 0v1"/>
+                            </svg>
+                            {{ u.username }}
+                        </td>
+                        <td>
+                            {% if u.is_admin %}
+                            <span class="role-pill admin">Admin</span>
+                            {% else %}
+                            <span class="role-pill user">Utilisateur</span>
+                            {% endif %}
+                        </td>
+                        <td class="cell-count">{{ u.diag_count }}</td>
+                        <td class="cell-actions">
+                            {% if u.id != current_user.id %}
+                            <button class="btn-sm btn-toggle" onclick="toggleAdmin({{ u.id }})" title="Changer le rôle">
+                                {% if u.is_admin %}Retirer admin{% else %}Rendre admin{% endif %}
+                            </button>
+                            <button class="btn-sm btn-danger" onclick="deleteUser({{ u.id }}, '{{ u.username }}')" title="Supprimer">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                            </button>
+                            {% else %}
+                            <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
+
+<script>
+async function toggleAdmin(userId) {
+    if (!confirm('Modifier le rôle de cet utilisateur ?')) return;
+    const res = await fetch(`/admin/toggle/${userId}`, { method: 'POST' });
+    if (res.ok) location.reload();
+    else {
+        const data = await res.json();
+        alert(data.error || 'Erreur');
+    }
+}
+
+async function deleteUser(userId, username) {
+    if (!confirm(`Supprimer l'utilisateur "${username}" et tout son historique ?`)) return;
+    const res = await fetch(`/admin/delete/${userId}`, { method: 'DELETE' });
+    if (res.ok) {
+        document.getElementById(`user-row-${userId}`).remove();
+    } else {
+        const data = await res.json();
+        alert(data.error || 'Erreur');
+    }
+}
+</script>
+{% endblock %}

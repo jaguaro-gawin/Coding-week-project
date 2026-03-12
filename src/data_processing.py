@@ -8,7 +8,7 @@ Pipeline de nettoyage (clean_data) — stratégie d'imputation en cascade :
   2. Suppression des colonnes avec > 50% de NaN
   3. Reconstruction du BMI depuis poids et taille (formule exacte), puis
      suppression de poids et taille pour éviter la redondance
-  4. Imputation par corrélation pour les paires fortement liées (|r| > 0.80) :
+  4. Imputation par corrélation pour les paires fortement liées (|r| > 0.69) :
      on ajuste une régression linéaire sur les lignes complètes, puis on
      prédit les NaN — bien plus précis que la médiane globale
   5. Médiane en dernier recours pour les NaN résiduels
@@ -168,7 +168,7 @@ def _impute_bmi(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _impute_by_correlation(df: pd.DataFrame,
-                            corr_threshold: float = 0.80,
+                            corr_threshold: float = 0.69,
                             target_col: str = "Diagnosis") -> pd.DataFrame:
     """
     Imputation par régression linéaire pour les paires fortement corrélées.
@@ -250,7 +250,7 @@ def _impute_by_correlation(df: pd.DataFrame,
 
 
 def _drop_correlated_features(df: pd.DataFrame,
-                               corr_threshold: float = 0.80,
+                               corr_threshold: float = 0.69,
                                target_col: str = "Diagnosis",
                                original_nan_counts: pd.Series = None) -> tuple:
     """
@@ -283,7 +283,7 @@ def _drop_correlated_features(df: pd.DataFrame,
 
     Args:
         df                 : DataFrame après imputation et feature engineering.
-        corr_threshold     : Seuil de corrélation (défaut 0.80).
+        corr_threshold     : Seuil de corrélation (défaut 0.69).
         target_col         : Colonne cible à exclure de la suppression.
         original_nan_counts: pd.Series avec le nombre de NaN par colonne
                              AVANT imputation, pour guider le choix.
@@ -378,7 +378,7 @@ def _drop_correlated_features(df: pd.DataFrame,
 
 def clean_data(df: pd.DataFrame,
                missing_threshold: float = 0.50,
-               corr_threshold: float = 0.80) -> pd.DataFrame:
+               corr_threshold: float = 0.69) -> pd.DataFrame:
     """
     Nettoie et enrichit le dataset en 9 étapes ordonnées.
 
@@ -401,10 +401,39 @@ def clean_data(df: pd.DataFrame,
     target_col = "Diagnosis"
 
     # ── Étape 1 ──────────────────────────────────────────────────────────────
-    cols_to_drop = [c for c in ["Management", "Severity"] if c in df_clean.columns]
+    # Quatre catégories de suppressions, toutes justifiées :
+    #
+    # . Variables cibles UCI — ne sont jamais des prédicteurs :
+    #     - Management, Severity
+    #
+    # . Data leakage post-hospitalisation :
+    #     - Length_of_Stay : connue uniquement à la sortie du patient
+    #
+    # . Biais circulaire — ont participé à construire la cible Diagnosis :
+    #     (doc UCI : label conservatif = Alvarado >= 4 ET Appendix_Diameter >= 6mm)
+    #     - Alvarado_Score, Paedriatic_Appendicitis_Score
+    #
+    # . Non validées par la littérature comme prédicteurs indépendants :
+    #     - Ketones_in_Urine  : non spécifique, absent des modèles multivariés
+    #     - RBC_in_Urine      : idem
+    #     - WBC_in_Urine      : idem
+    #     - Dysuria           : davantage associé à l'infection urinaire
+    #     - Stool             : peu mentionné comme prédicteur indépendant
+    #     - US_Performed      : décision clinique, pas caractéristique du patient
+    #     - Hemoglobin, RDW, Thrombocyte_Count, RBC_Count : marqueurs hématologiques
+    #       généraux, peu spécifiques à l'appendicite, non retenus dans les modèles multivariés
+    TARGET_COLS    = ["Management", "Severity"]
+    LEAKAGE_COLS   = ["Length_of_Stay"]
+    CIRCULAR_COLS  = ["Alvarado_Score", "Paedriatic_Appendicitis_Score"]
+    WEAK_COLS      = ["Ketones_in_Urine", "RBC_in_Urine", "WBC_in_Urine",
+                      "Dysuria", "Stool", "US_Performed",
+                      "Hemoglobin", "RDW", "Thrombocyte_Count", "RBC_Count"]
+
+    cols_to_drop = [c for c in TARGET_COLS + LEAKAGE_COLS + CIRCULAR_COLS + WEAK_COLS
+                    if c in df_clean.columns]
     if cols_to_drop:
         df_clean = df_clean.drop(columns=cols_to_drop)
-        logger.info("Étape 1 — Colonnes parasites : %s", cols_to_drop)
+        logger.info("Étape 1 — %d colonne(s) supprimées : %s", len(cols_to_drop), cols_to_drop)
 
     # ── Étape 2 ──────────────────────────────────────────────────────────────
     feature_cols = [c for c in df_clean.columns if c != target_col]

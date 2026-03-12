@@ -379,13 +379,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ═══ HISTORY PAGE ═══ */
     window.deleteRecord = function(id) {
-        if (!confirm('Delete this record?')) return;
+        if (!confirm('Supprimer cet enregistrement ?')) return;
         fetch('/history/' + encodeURIComponent(id), { method: 'DELETE' })
             .then(r => { if (r.ok) location.reload(); });
     };
 
     window.clearHistory = function() {
-        if (!confirm('Clear all history records?')) return;
+        if (!confirm('Effacer tout l\'historique ? Cette action est irréversible.')) return;
         fetch('/history/clear', { method: 'POST' })
             .then(r => { if (r.ok) location.reload(); });
     };
@@ -403,7 +403,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* Auto-dismiss flash */
-    document.querySelectorAll('.flash-message').forEach(m => {
-        setTimeout(() => { m.style.opacity = '0'; m.style.transform = 'translateY(-10px)'; setTimeout(() => m.remove(), 400); }, 4000);
+    document.querySelectorAll('.flash-msg').forEach(m => {
+        m.style.transition = 'opacity 0.4s, transform 0.4s';
+        setTimeout(() => { m.style.opacity = '0'; m.style.transform = 'translateY(-10px)'; setTimeout(() => m.remove(), 400); }, 3000);
     });
 });

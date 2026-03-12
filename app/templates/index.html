@@ -1,16 +1,18 @@
 {% extends "base.html" %}
-{% block title %}PediAppend &mdash; Pediatric Appendicitis Diagnosis{% endblock %}
+{% block title %}PediAppend &mdash; Diagnostic pédiatrique de l'appendicite{% endblock %}
+
+{% block footer %}{% endblock %}
 
 {% block content %}
 <!-- ═══ SIDE STEP NAV ═══ -->
 <nav class="side-steps" id="sideSteps">
     <a class="side-step active" data-goto="0">
         <span class="side-step-dot"></span>
-        <span class="side-step-label">Introduction</span>
+        <span class="side-step-label">Accueil</span>
     </a>
     <a class="side-step" data-goto="1">
         <span class="side-step-dot"></span>
-        <span class="side-step-label">Fonctionnement</span>
+        <span class="side-step-label">Performances</span>
     </a>
     <a class="side-step" data-goto="2">
         <span class="side-step-dot"></span>
@@ -80,7 +82,7 @@
     <div class="slide-arrow-wrap">
         <button class="slide-arrow-btn next-slide" data-dir="next" aria-label="Section suivante">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4L10 16M10 16L16 10M10 16L4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Fonctionnement</span>
+            <span class="slide-arrow-label">Performances</span>
         </button>
     </div>
 </section>
@@ -162,13 +164,13 @@
 
     <!-- Step arrows -->
     <div class="slide-arrow-wrap">
-        <button class="slide-arrow-btn prev-slide" data-dir="prev" aria-label="Previous section">
+        <button class="slide-arrow-btn prev-slide" data-dir="prev" aria-label="Section précédente">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 16L10 4M10 4L4 10M10 4L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Introduction</span>
+            <span class="slide-arrow-label">Accueil</span>
         </button>
-        <button class="slide-arrow-btn next-slide" data-dir="next" aria-label="Next section">
+        <button class="slide-arrow-btn next-slide" data-dir="next" aria-label="Section suivante">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4L10 16M10 16L16 10M10 16L4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Fonctionnalit&eacute;s</span>
+            <span class="slide-arrow-label">Fonctionnalités</span>
         </button>
     </div>
 </section>
@@ -208,7 +210,7 @@
             <div class="feature-card animate-in">
                 <div class="feature-card-glow orange-glow"></div>
                 <div class="feature-card-icon orange-icon">&#128202;</div>
-                <h3>46 Variables cliniques</h3>
+                <h3>42 Variables cliniques</h3>
                 <p>Démographie, symptômes, valeurs de laboratoire, échographie et interactions calculées.</p>
                 <div class="feature-tag">Multi-étapes &bull; Validé</div>
             </div>
@@ -229,19 +231,11 @@
         </div>
     </div>
 
-    <!-- Inline CTA -->
-    <div class="slide-cta animate-in">
-        <a href="{{ url_for('diagnosis') }}" class="btn-primary-hero">
-            &#129657; Lancer un diagnostic &rarr;
-            <span class="shine"></span>
-        </a>
-    </div>
-
     <!-- Step arrows -->
     <div class="slide-arrow-wrap">
         <button class="slide-arrow-btn prev-slide" data-dir="prev" aria-label="Section précédente">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 16L10 4M10 4L4 10M10 4L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="slide-arrow-label">Fonctionnement</span>
+            <span class="slide-arrow-label">Performances</span>
         </button>
     </div>
 </section>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}PediAppend — AI-Powered Pediatric Appendicitis Diagnosis{% endblock %}</title>
-    <meta name="description" content="Advanced clinical decision support system for pediatric appendicitis diagnosis using machine learning.">
+    <meta name="description" content="Système d'aide à la décision clinique pour le diagnostic pédiatrique de l'appendicite par apprentissage automatique.">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -18,24 +18,38 @@
                 </div>
                 <div class="logo-text">
                     <span class="name">PediAppend</span>
-                    <span class="sub">AI Clinical Support</span>
+                    <span class="sub">Aide à la Décision Clinique</span>
                 </div>
             </a>
 
             <nav class="nav-links">
-                <a href="{{ url_for('home') }}">Features</a>
+                <a href="{{ url_for('home') }}">Accueil</a>
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('diagnosis') }}">Methodology</a>
-                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('diagnosis') }}">Diagnostic</a>
+                <a href="{{ url_for('history') }}">Historique</a>
                 {% endif %}
 
                 {% if current_user.is_authenticated %}
                 <div class="nav-user">
-                    <span class="nav-user-name">👤 {{ current_user.username }}</span>
+                    <a href="{{ url_for('profile') }}" class="nav-user-link" title="Mon profil">
+                        <svg class="nav-user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21v-1a6 6 0 0 1 12 0v1"/>
+                        </svg>
+                        <span class="nav-user-name">{{ current_user.username }}</span>
+                    </a>
+                    {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-ghost-sm btn-admin" title="Administration">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Admin
+                    </a>
+                    {% endif %}
                     <a href="{{ url_for('logout') }}" class="btn btn-ghost-sm">Déconnexion</a>
                 </div>
                 <a href="{{ url_for('diagnosis') }}" class="btn btn-primary">
-                    🩺 Start Diagnosis →
+                    🩺 Lancer un diagnostic →
                 </a>
                 {% else %}
                 <a href="{{ url_for('login') }}" class="btn btn-ghost-sm">Connexion</a>
@@ -62,6 +76,26 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    <!-- ═══ Footer ═══ -->
+    {% block footer %}
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">♥ PediAppend</span>
+                <span class="footer-copy">&copy; 2026 — Aide à la décision clinique par IA</span>
+            </div>
+            <div class="footer-links">
+                <a href="{{ url_for('home') }}">Accueil</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('diagnosis') }}">Diagnostic</a>
+                <a href="{{ url_for('history') }}">Historique</a>
+                <a href="{{ url_for('profile') }}">Profil</a>
+                {% endif %}
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
