@@ -17,7 +17,7 @@
 {% block title %}PediAppend &mdash; Diagnostic clinique{% endblock %}
 
 {% block content %}
-<section class="form-section" id="diagnosis">
+<section class="form-section" id="diagnosis" aria-label="Formulaire de diagnostic clinique">
     <div class="form-outer">
         <!-- Titre de la page de diagnostic -->
         <div class="section-title animate-in">
@@ -50,49 +50,49 @@
                 </div>
             </div>
             <!-- Barre de progression globale (remplie progressivement à chaque étape) -->
-            <div class="step-progress-bar"><div class="step-progress-fill"></div></div>
+            <div class="step-progress-bar" role="progressbar" aria-label="Progression de la saisie" aria-valuemin="0" aria-valuemax="100"><div class="step-progress-fill"></div></div>
         </div>
 
         <!-- ═══ Formulaire principal — Envoi en POST vers la route 'predict' ═══ -->
-        <form action="{{ url_for('predict') }}" method="POST" id="diagnosisForm">
+        <form action="{{ url_for('predict') }}" method="POST" id="diagnosisForm" novalidate>
             <div class="form-card">
 
                 <!-- ═══ Étape 0 : Démographie du patient ═══ -->
                 <!-- Collecte les informations de base : nom, dates, âge, sexe, taille, poids, IMC -->
-                <div class="form-step" data-step="0">
+                <div class="form-step" data-step="0" aria-label="Étape 1 sur 3 : Démographie du patient">
                     <div class="form-card-body">
                         <div class="form-section-header">
-                            <div class="form-section-icon violet">&#128100;</div>
+                            <div class="form-section-icon violet" aria-hidden="true">&#128100;</div>
                             <div><h2>D&eacute;mographie du patient</h2><p>Informations de base pour l&rsquo;&eacute;valuation</p></div>
                         </div>
 
                         <!-- Prénom et Nom du patient -->
                         <div class="form-grid-2">
                             <div class="form-group">
-                                <label><span class="label-icon">&#128101;</span> Pr&eacute;nom</label>
-                                <input type="text" id="patient_first_name" name="patient_first_name" placeholder="ex. Marie" maxlength="60" required>
-                                <span class="field-error">Requis</span>
+                                <label for="patient_first_name"><span class="label-icon" aria-hidden="true">&#128101;</span> Pr&eacute;nom</label>
+                                <input type="text" id="patient_first_name" name="patient_first_name" placeholder="ex. Marie" maxlength="60" required aria-required="true" aria-describedby="err-first-name">
+                                <span class="field-error" id="err-first-name">Requis</span>
                             </div>
                             <div class="form-group">
-                                <label><span class="label-icon">&#128101;</span> Nom</label>
-                                <input type="text" id="patient_last_name" name="patient_last_name" placeholder="ex. Dupont" maxlength="60" required>
-                                <span class="field-error">Requis</span>
+                                <label for="patient_last_name"><span class="label-icon" aria-hidden="true">&#128101;</span> Nom</label>
+                                <input type="text" id="patient_last_name" name="patient_last_name" placeholder="ex. Dupont" maxlength="60" required aria-required="true" aria-describedby="err-last-name">
+                                <span class="field-error" id="err-last-name">Requis</span>
                             </div>
                         </div>
 
                         <!-- Date de naissance et date d'examen (utilisées pour calculer l'âge automatiquement) -->
                         <div class="form-grid-2">
                             <div class="form-group">
-                                <label><span class="label-icon">&#128197;</span> Date de naissance</label>
-                                <input type="date" id="DateOfBirth" required>
-                                <span class="field-hint">Date de naissance du patient</span>
-                                <span class="field-error">Requis</span>
+                                <label for="DateOfBirth"><span class="label-icon" aria-hidden="true">&#128197;</span> Date de naissance</label>
+                                <input type="date" id="DateOfBirth" required aria-required="true" aria-describedby="hint-dob err-dob">
+                                <span class="field-hint" id="hint-dob">Date de naissance du patient</span>
+                                <span class="field-error" id="err-dob">Requis</span>
                             </div>
                             <div class="form-group">
-                                <label><span class="label-icon">&#128197;</span> Date d&rsquo;examen</label>
-                                <input type="date" id="ExamDate" required>
-                                <span class="field-hint">Date de la consultation</span>
-                                <span class="field-error">Requis</span>
+                                <label for="ExamDate"><span class="label-icon" aria-hidden="true">&#128197;</span> Date d&rsquo;examen</label>
+                                <input type="date" id="ExamDate" required aria-required="true" aria-describedby="hint-exam-date err-exam-date">
+                                <span class="field-hint" id="hint-exam-date">Date de la consultation</span>
+                                <span class="field-error" id="err-exam-date">Requis</span>
                             </div>
                         </div>
 
@@ -118,27 +118,27 @@
                         <!-- Sexe biologique, taille et poids -->
                         <div class="form-grid-2">
                             <!-- Sélecteur de sexe biologique (boutons toggle Masculin/Féminin) -->
-                            <div class="form-group">
-                                <label><span class="label-icon">&#128100;</span> Sexe biologique</label>
+                            <div class="form-group" role="group" aria-labelledby="sex-label">
+                                <label id="sex-label"><span class="label-icon" aria-hidden="true">&#128100;</span> Sexe biologique</label>
                                 <div class="sex-toggle">
-                                    <button type="button" class="sex-btn" data-value="male">&#9794; Masculin</button>
-                                    <button type="button" class="sex-btn" data-value="female">&#9792; F&eacute;minin</button>
+                                    <button type="button" class="sex-btn" data-value="male" aria-pressed="false">&#9794; Masculin</button>
+                                    <button type="button" class="sex-btn" data-value="female" aria-pressed="false">&#9792; F&eacute;minin</button>
                                 </div>
                                 <!-- Champ caché qui stocke la valeur sélectionnée (male/female) -->
-                                <input type="hidden" id="Sex" name="Sex" required>
-                                <span class="field-error">Requis</span>
+                                <input type="hidden" id="Sex" name="Sex" required aria-required="true" aria-describedby="err-sex">
+                                <span class="field-error" id="err-sex">Requis</span>
                             </div>
                             <!-- Taille en centimètres -->
                             <div class="form-group">
-                                <label><span class="label-icon">&#128207;</span> Taille <span class="unit">(cm)</span></label>
-                                <input type="number" id="Height" name="Height" step="0.1" min="30" max="200" placeholder="ex. 140" required>
-                                <span class="field-error">Requis</span>
+                                <label for="Height"><span class="label-icon" aria-hidden="true">&#128207;</span> Taille <span class="unit">(cm)</span></label>
+                                <input type="number" id="Height" name="Height" step="0.1" min="30" max="200" placeholder="ex. 140" required aria-required="true" aria-describedby="err-height">
+                                <span class="field-error" id="err-height">Requis</span>
                             </div>
                             <!-- Poids en kilogrammes -->
                             <div class="form-group">
-                                <label><span class="label-icon">&#9878;</span> Poids <span class="unit">(kg)</span></label>
-                                <input type="number" id="Weight" name="Weight" step="0.1" min="3" max="150" placeholder="ex. 36" required>
-                                <span class="field-error">Requis</span>
+                                <label for="Weight"><span class="label-icon" aria-hidden="true">&#9878;</span> Poids <span class="unit">(kg)</span></label>
+                                <input type="number" id="Weight" name="Weight" step="0.1" min="3" max="150" placeholder="ex. 36" required aria-required="true" aria-describedby="err-weight">
+                                <span class="field-error" id="err-weight">Requis</span>
                             </div>
                         </div>
 
@@ -162,10 +162,10 @@
 
                 <!-- ═══ Étape 1 : Symptômes & Présentation clinique ═══ -->
                 <!-- Collecte les symptômes associés via des interrupteurs (toggles) et un menu déroulant -->
-                <div class="form-step" data-step="1" style="display:none">
+                <div class="form-step" data-step="1" style="display:none" aria-label="Étape 2 sur 3 : Symptômes et présentation clinique">
                     <div class="form-card-body">
                         <div class="form-section-header">
-                            <div class="form-section-icon cyan">&#128147;</div>
+                            <div class="form-section-icon cyan" aria-hidden="true">&#128147;</div>
                             <div><h2>Sympt&ocirc;mes &amp; Pr&eacute;sentation</h2><p>Sympt&ocirc;mes cliniques et signes associ&eacute;s</p></div>
                         </div>
 
@@ -208,14 +208,14 @@
                         <!-- Menu déroulant : Sélection du type de péritonite -->
                         <div class="form-grid-2" style="margin-top:2rem">
                             <div class="form-group">
-                                <label>P&eacute;ritonite</label>
-                                <select id="Peritonitis" name="Peritonitis" required>
+                                <label for="Peritonitis">P&eacute;ritonite</label>
+                                <select id="Peritonitis" name="Peritonitis" required aria-required="true" aria-describedby="err-peritonitis">
                                     <option value="" disabled selected>S&eacute;lectionner</option>
                                     <option value="no">Non</option>
                                     <option value="local">Locale</option>
                                     <option value="generalized">G&eacute;n&eacute;ralis&eacute;e</option>
                                 </select>
-                                <span class="field-error">Requis</span>
+                                <span class="field-error" id="err-peritonitis">Requis</span>
                             </div>
                         </div>
                     </div>
@@ -223,10 +223,10 @@
 
                 <!-- ═══ Étape 2 : Examen clinique & Résultats de laboratoire ═══ -->
                 <!-- Collecte les résultats de l'examen physique, analyses biologiques et échographie -->
-                <div class="form-step" data-step="2" style="display:none">
+                <div class="form-step" data-step="2" style="display:none" aria-label="Étape 3 sur 3 : Examen clinique et laboratoire">
                     <div class="form-card-body">
                         <div class="form-section-header">
-                            <div class="form-section-icon emerald">&#129657;</div>
+                            <div class="form-section-icon emerald" aria-hidden="true">&#129657;</div>
                             <div><h2>Examen clinique &amp; Laboratoire</h2><p>Examen physique et r&eacute;sultats biologiques</p></div>
                         </div>
 
@@ -235,29 +235,29 @@
                         <div class="form-grid-3">
                             <!-- Température corporelle en degrés Celsius -->
                             <div class="form-group">
-                                <label><span class="label-icon">&#127777;</span> Temp&eacute;rature <span class="unit">(&deg;C)</span></label>
-                                <input type="number" id="Body_Temperature" name="Body_Temperature" step="0.1" min="35" max="42" placeholder="ex. 37.5" required>
-                                <span class="field-error">Requis</span>
+                                <label for="Body_Temperature"><span class="label-icon" aria-hidden="true">&#127777;</span> Temp&eacute;rature <span class="unit">(&deg;C)</span></label>
+                                <input type="number" id="Body_Temperature" name="Body_Temperature" step="0.1" min="35" max="42" placeholder="ex. 37.5" required aria-required="true" aria-describedby="err-temp">
+                                <span class="field-error" id="err-temp">Requis</span>
                             </div>
                             <!-- Sensibilité au rebond controlatéral (test clinique) -->
                             <div class="form-group">
-                                <label>Rebond controlat&eacute;ral</label>
-                                <select name="Contralateral_Rebound_Tenderness" required>
+                                <label for="Contralateral_Rebound_Tenderness">Rebond controlat&eacute;ral</label>
+                                <select id="Contralateral_Rebound_Tenderness" name="Contralateral_Rebound_Tenderness" required aria-required="true" aria-describedby="err-contralateral">
                                     <option value="" disabled selected>S&eacute;lectionner</option>
                                     <option value="yes">Oui</option>
                                     <option value="no">Non</option>
                                 </select>
-                                <span class="field-error">Requis</span>
+                                <span class="field-error" id="err-contralateral">Requis</span>
                             </div>
                             <!-- Sensibilité au rebond ipsilatéral (test clinique) -->
                             <div class="form-group">
-                                <label>Rebond ipsilat&eacute;ral</label>
-                                <select name="Ipsilateral_Rebound_Tenderness" required>
+                                <label for="Ipsilateral_Rebound_Tenderness">Rebond ipsilat&eacute;ral</label>
+                                <select id="Ipsilateral_Rebound_Tenderness" name="Ipsilateral_Rebound_Tenderness" required aria-required="true" aria-describedby="err-ipsilateral">
                                     <option value="" disabled selected>S&eacute;lectionner</option>
                                     <option value="yes">Oui</option>
                                     <option value="no">Non</option>
                                 </select>
-                                <span class="field-error">Requis</span>
+                                <span class="field-error" id="err-ipsilateral">Requis</span>
                             </div>
                         </div>
 
@@ -282,17 +282,17 @@
                         <div class="form-grid-3">
                             <!-- Numération des leucocytes (globules blancs) — indicateur d'infection -->
                             <div class="form-group">
-                                <label><span class="label-icon">&#128300;</span> Leucocytes (WBC) <span class="unit">(10&sup3;/&micro;L)</span></label>
-                                <input type="number" id="WBC_Count" name="WBC_Count" step="0.01" min="0" placeholder="ex. 12.5" required>
-                                <span class="field-hint">R&eacute;f&eacute;rence : 4.5-13.5</span>
-                                <span class="field-error">Requis</span>
+                                <label for="WBC_Count"><span class="label-icon" aria-hidden="true">&#128300;</span> Leucocytes (WBC) <span class="unit">(10&sup3;/&micro;L)</span></label>
+                                <input type="number" id="WBC_Count" name="WBC_Count" step="0.01" min="0" placeholder="ex. 12.5" required aria-required="true" aria-describedby="hint-wbc err-wbc">
+                                <span class="field-hint" id="hint-wbc">R&eacute;f&eacute;rence : 4.5-13.5</span>
+                                <span class="field-error" id="err-wbc">Requis</span>
                             </div>
                             <!-- Protéine C-réactive (CRP) — marqueur d'inflammation -->
                             <div class="form-group">
-                                <label><span class="label-icon">&#128300;</span> CRP <span class="unit">(mg/L)</span></label>
-                                <input type="number" name="CRP" step="0.1" min="0" placeholder="ex. 15.0" required>
-                                <span class="field-hint">R&eacute;f&eacute;rence : &lt;10</span>
-                                <span class="field-error">Requis</span>
+                                <label for="CRP"><span class="label-icon" aria-hidden="true">&#128300;</span> CRP <span class="unit">(mg/L)</span></label>
+                                <input type="number" id="CRP" name="CRP" step="0.1" min="0" placeholder="ex. 15.0" required aria-required="true" aria-describedby="hint-crp err-crp">
+                                <span class="field-hint" id="hint-crp">R&eacute;f&eacute;rence : &lt;10</span>
+                                <span class="field-error" id="err-crp">Requis</span>
                             </div>
                         </div>
 
@@ -301,13 +301,13 @@
                         <div class="form-grid-3">
                             <!-- Visibilité de l'appendice à l'échographie -->
                             <div class="form-group">
-                                <label>Appendice visible &agrave; l&rsquo;&eacute;cho</label>
-                                <select name="Appendix_on_US" required>
+                                <label for="Appendix_on_US">Appendice visible &agrave; l&rsquo;&eacute;cho</label>
+                                <select id="Appendix_on_US" name="Appendix_on_US" required aria-required="true" aria-describedby="err-appendix-us">
                                     <option value="" disabled selected>S&eacute;lectionner</option>
                                     <option value="yes">Oui</option>
                                     <option value="no">Non</option>
                                 </select>
-                                <span class="field-error">Requis</span>
+                                <span class="field-error" id="err-appendix-us">Requis</span>
                             </div>
                             <!-- Diamètre de l'appendice en mm (>6mm = seuil pathologique) -->
                             <div class="form-group">
@@ -316,13 +316,13 @@
                             </div>
                             <!-- Présence d'un épanchement liquidien libre dans l'abdomen -->
                             <div class="form-group">
-                                <label>&Eacute;panchement libre</label>
-                                <select name="Free_Fluids" required>
+                                <label for="Free_Fluids">&Eacute;panchement libre</label>
+                                <select id="Free_Fluids" name="Free_Fluids" required aria-required="true" aria-describedby="err-free-fluids">
                                     <option value="" disabled selected>S&eacute;lectionner</option>
                                     <option value="yes">Oui</option>
                                     <option value="no">Non</option>
                                 </select>
-                                <span class="field-error">Requis</span>
+                                <span class="field-error" id="err-free-fluids">Requis</span>
                             </div>
                         </div>
                     </div>
