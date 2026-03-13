@@ -36,6 +36,9 @@
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
   --radius-3xl: 1.5rem;
+
+  /* Mise en page */
+  --navbar-height: 5rem;
 }
 
 /* ── Reset & Base ───────────────────────────────────────────────── */
@@ -174,7 +177,7 @@ input, select, textarea { font-family: inherit; }
   max-width: 1280px; margin: 0 auto;
   padding: 0 1.5rem;
   display: flex; align-items: center; justify-content: space-between;
-  height: 5rem;
+  height: var(--navbar-height);
 }
 
 /* Logo */
