@@ -72,11 +72,11 @@
                         <td class="cell-actions">
                             {% if u.id != current_user.id %}
                             <!-- Bouton : Promouvoir ou rétrograder le rôle admin -->
-                            <button type="button" class="btn-sm btn-toggle" onclick="toggleAdmin({{ u.id }})" title="Changer le rôle">
+                            <button type="button" class="btn-sm btn-toggle" data-action="toggle-admin" data-user-id="{{ u.id }}" title="Changer le rôle">
                                 {% if u.is_admin %}Retirer admin{% else %}Rendre admin{% endif %}
                             </button>
                             <!-- Bouton : Supprimer l'utilisateur et tout son historique -->
-                            <button type="button" class="btn-sm btn-danger" onclick="deleteUser({{ u.id }}, '{{ u.username }}')" title="Supprimer">
+                            <button type="button" class="btn-sm btn-danger" data-action="delete-user" data-user-id="{{ u.id }}" data-username="{{ u.username }}" title="Supprimer">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
                             </button>
                             {% else %}

@@ -6,29 +6,40 @@
    ═══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ═══ BASCULE DU RÔLE ADMIN ═══ */
-    /* Envoie un POST pour promouvoir/rétrograder un utilisateur */
-    window.toggleAdmin = async function(userId) {
-        if (!confirm('Modifier le rôle de cet utilisateur ?')) return;
-        const res = await fetch(`/admin/toggle/${userId}`, { method: 'POST' });
-        if (res.ok) location.reload();
-        else {
-            const data = await res.json();
-            alert(data.error || 'Erreur');
-        }
-    };
+    const table = document.querySelector('.admin-table');
+    if (!table) return;
 
-    /* ═══ SUPPRESSION D'UN UTILISATEUR ═══ */
-    /* Envoie un DELETE pour supprimer l'utilisateur et son historique */
-    window.deleteUser = async function(userId, username) {
-        if (!confirm(`Supprimer l'utilisateur "${username}" et tout son historique ?`)) return;
-        const res = await fetch(`/admin/delete/${userId}`, { method: 'DELETE' });
-        if (res.ok) {
-            document.getElementById(`user-row-${userId}`).remove();
-        } else {
-            const data = await res.json();
-            alert(data.error || 'Erreur');
+    table.addEventListener('click', async (e) => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+
+        const action = btn.dataset.action;
+        const userId = btn.dataset.userId;
+        if (!userId) return;
+
+        if (action === 'toggle-admin') {
+            if (!confirm('Modifier le rôle de cet utilisateur ?')) return;
+            const res = await fetch(`/admin/toggle/${encodeURIComponent(userId)}`, { method: 'POST' });
+            if (res.ok) location.reload();
+            else {
+                let data = {};
+                try { data = await res.json(); } catch {}
+                alert(data.error || 'Erreur');
+            }
         }
-    };
+
+        if (action === 'delete-user') {
+            const username = btn.dataset.username || '';
+            if (!confirm(`Supprimer l'utilisateur "${username}" et tout son historique ?`)) return;
+            const res = await fetch(`/admin/delete/${encodeURIComponent(userId)}`, { method: 'DELETE' });
+            if (res.ok) {
+                document.getElementById(`user-row-${userId}`)?.remove();
+            } else {
+                let data = {};
+                try { data = await res.json(); } catch {}
+                alert(data.error || 'Erreur');
+            }
+        }
+    });
 
 });
