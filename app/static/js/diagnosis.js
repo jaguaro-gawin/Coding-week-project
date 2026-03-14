@@ -163,15 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (wEl) wEl.addEventListener('input', calcBMI);
 
     /* ═══ SÉLECTION DU SEXE ═══ */
-    /* Fonction globale car appelée via onclick dans le HTML */
-    window.selectSex = function(btn) {
-        document.querySelectorAll('.sex-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        const sexInput = document.getElementById('Sex');
-        if (sexInput) sexInput.value = btn.dataset.value;
-        const g = sexInput?.closest('.form-group') || sexInput?.parentElement;
-        if (g) g.classList.remove('has-error');
-    };
+    document.querySelectorAll('.sex-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.sex-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            const sexInput = document.getElementById('Sex');
+            if (sexInput) sexInput.value = btn.dataset.value;
+            const g = sexInput?.closest('.form-group') || sexInput?.parentElement;
+            if (g) g.classList.remove('has-error');
+        });
+    });
 
     /* ═══ TOGGLES DE SYMPTÔMES ═══ */
     /* Chaque toggle bascule entre 'yes' et 'no' dans un champ hidden */
